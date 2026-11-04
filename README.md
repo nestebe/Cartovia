@@ -2,9 +2,9 @@
 
 # Cartovia
 
-**Cartes vectorielles modernes pour les applications desktop .NET — WPF et Windows Forms**
+**Modern vector maps for .NET desktop apps — WPF and Windows Forms**
 
-MapLibre GL JS (open source, sans compte) ou Mapbox GL JS · WebView2 · .NET 6 / 8 / 10
+MapLibre GL JS (open source, no account needed) or Mapbox GL JS · WebView2 · .NET 6 / 8 / 10
 
 [![CI](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml/badge.svg)](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-6366F1.svg)](LICENSE)
@@ -12,26 +12,28 @@ MapLibre GL JS (open source, sans compte) ou Mapbox GL JS · WebView2 · .NET 6 
 ![Platforms](https://img.shields.io/badge/UI-WPF%20%7C%20WinForms-0EA5E9)
 ![Engines](https://img.shields.io/badge/engines-MapLibre%20%7C%20Mapbox-22C55E)
 
+**English** · [Français](README.fr.md)
+
 ![Cartovia WPF showcase](docs/screenshot.png)
 
 </div>
 
-Cartovia embarque un moteur de rendu de cartes vectorielles WebGL dans une WebView2 et l'expose à travers une
-**API C# typée** : couches, styles, expressions, marqueurs, popups, contrôles, plugins et événements remontés en .NET.
-Par défaut, il fonctionne **sans aucun compte ni clé** grâce à MapLibre GL JS et aux fonds de carte gratuits
-d'OpenFreeMap ; Mapbox GL JS est disponible en option, avec la même API.
+Cartovia hosts a WebGL vector map engine in WebView2 and exposes it through a **strongly-typed C# API**: layers,
+styles, expressions, markers, popups, controls, plugins and events raised in .NET.
+Out of the box it works **without any account or key**, using MapLibre GL JS and the free OpenFreeMap basemaps;
+Mapbox GL JS is available as an option, with the same API.
 
 ## Packages
 
-| Package | Rôle |
+| Package | Purpose |
 |---|---|
-| `Cartovia.Wpf` | Contrôle `MapView` WPF (propriétés bindables, caméra synchronisée, commandes MVVM) |
-| `Cartovia.WinForms` | Contrôle `MapView` Windows Forms |
-| `Cartovia.Core` | API typée indépendante de l'UI : caméra, sources, **toutes les couches et propriétés de style**, expressions, annotations, plugins, événements, GeoJSON |
-| `Cartovia.WebView2` | Hôte WebView2 partagé (page embarquée, messages, navigation, permissions, capture PNG, export PDF) |
-| `Cartovia.Mapbox.Services` | Extension Mapbox optionnelle : clients REST Geocoding, Search Box, Directions, Matrix, Isochrone, Optimization, Map Matching, Static Images, Tilequery |
+| `Cartovia.Wpf` | WPF `MapView` control (bindable properties, two-way camera, MVVM commands) |
+| `Cartovia.WinForms` | Windows Forms `MapView` control |
+| `Cartovia.Core` | UI-agnostic typed API: camera, sources, **every style layer and property**, expressions, annotations, plugins, events, GeoJSON |
+| `Cartovia.WebView2` | Shared WebView2 host (embedded page, messaging, navigation, permissions, PNG capture, PDF export) |
+| `Cartovia.Mapbox.Services` | Optional Mapbox extension: REST clients for Geocoding, Search Box, Directions, Matrix, Isochrone, Optimization, Map Matching, Static Images, Tilequery |
 
-## Démarrage rapide (WPF)
+## Quick start (WPF)
 
 ```bash
 dotnet add package Cartovia.Wpf
@@ -49,79 +51,79 @@ dotnet add package Cartovia.Wpf
 var map = MapView.Map;
 map.Loaded += async (_, _) =>
 {
-    await map.AddSourceAsync(new GeoJsonSource("villes", villes) { GenerateId = true });
-    await map.AddLayerAsync(new CircleLayer("villes", "villes")
+    await map.AddSourceAsync(new GeoJsonSource("cities", cities) { GenerateId = true });
+    await map.AddLayerAsync(new CircleLayer("cities", "cities")
     {
         CircleRadius = Expr.InterpolateZoom((5, 3), (14, 12)),
-        CircleColor = Expr.Match(Expr.Get("type"), "#64748b", ("capitale", "#dc2626")),
+        CircleColor = Expr.Match(Expr.Get("type"), "#64748b", ("capital", "#dc2626")),
     });
-    await map.ShowPopupOnClickAsync("villes", "<b>{nom}</b>");
+    await map.ShowPopupOnClickAsync("cities", "<b>{name}</b>");
     await map.AddPluginAsync(new DrawPlugin());
 };
-map.OnLayer("villes", LayerEvent.Click, (_, e) => Debug.WriteLine(e.Feature?.GetProperty<string>("nom")));
+map.OnLayer("cities", LayerEvent.Click, (_, e) => Debug.WriteLine(e.Feature?.GetProperty<string>("name")));
 ```
 
-Avec Mapbox : `Engine="Mapbox" AccessToken="pk.…" MapStyle="mapbox://styles/mapbox/standard"`.
+With Mapbox: `Engine="Mapbox" AccessToken="pk.…" MapStyle="mapbox://styles/mapbox/standard"`.
 
-## Fonctionnalités
+## Features
 
-- **Deux moteurs, une API** : MapLibre GL JS v5 (par défaut, licence BSD) et Mapbox GL JS v3 (Standard, lumières 3D,
-  neige/pluie, interactions sur featuresets). Versions par défaut dans `EngineDefaults`, surchargeables.
-- **Couches** : 15 types de couche et 237 propriétés paint/layout générés depuis les spécifications officielles
-  (`tools/generate_style_spec.py`) ; la doc XML indique le moteur compatible, la valeur par défaut, les bornes et les unités.
-- **Expressions** : helpers typés (`Interpolate`, `Match`, `Case`, `Step`, `Let`, `Format`…), les 102 opérateurs de la spec
-  et les opérateurs C# (`Expr.Get("v") * 2`).
-- **Sources** : GeoJSON (clustering, `updateData`), vector, raster, raster-dem, raster-array, image, vidéo, `RawSource`.
-- **Caméra** : `FlyToAsync` / `EaseToAsync` / `FitBoundsAsync` qui attendent la fin de l'animation, padding, globe.
-- **Événements** : plus de 40 événements typés (souris, caméra, données, erreurs), `On("nom")` pour les autres,
-  événements par couche, marqueurs, popups, contrôles et plugins ; throttling des événements haute fréquence.
-- **Annotations et contrôles** : marqueurs (HTML, drag, popup), popups, navigation, échelle, plein écran, géolocalisation,
-  attribution, terrain, globe et `HtmlControl` (contrôle HTML dont les commandes remontent en .NET).
-- **Plugins** : Draw (dessin et édition), Geocoder (Nominatim, fournisseur .NET ou Mapbox), Directions (Mapbox), Turf.js ;
-  `ScriptPlugin` / `MapPlugin` pour vos propres plugins (commandes, événements, appels JS → .NET).
-- **Extensions** : clusters, heatmap, bâtiments 3D, terrain 3D (AWS Terrain Tiles sans clé avec MapLibre), survol et
-  sélection par feature-state, popup au clic avec template, ajout GeoJSON automatique, overlays raster WMS/XYZ.
-- **Robustesse** : appels mis en file jusqu'au chargement, timeouts, exceptions typées, couches utilisateur restaurées
-  après un changement de style, rechargement après crash du moteur de rendu, liens ouverts dans le navigateur,
-  message clair si le runtime WebView2 manque.
-- **Échappatoires** : `InvokeAsync("méthode", …)` vers n'importe quelle méthode du moteur, `EvalAsync(js)`,
-  `RegisterHostCallback` (appel .NET depuis le JavaScript).
-- **Export** : capture PNG/JPEG et PDF.
+- **Two engines, one API**: MapLibre GL JS v5 (default, BSD license) and Mapbox GL JS v3 (Standard style, 3D lights,
+  snow/rain, featureset interactions). Default versions live in `EngineDefaults` and can be overridden.
+- **Layers**: 15 layer types and 237 paint/layout properties generated from the official style specifications
+  (`tools/generate_style_spec.py`); XML docs state the supporting engine, default value, range and units.
+- **Expressions**: typed helpers (`Interpolate`, `Match`, `Case`, `Step`, `Let`, `Format`…), all 102 operators of the spec,
+  and C# operators (`Expr.Get("v") * 2`).
+- **Sources**: GeoJSON (clustering, `updateData`), vector, raster, raster-dem, raster-array, image, video, `RawSource`.
+- **Camera**: `FlyToAsync` / `EaseToAsync` / `FitBoundsAsync` that complete when the animation ends, padding, globe.
+- **Events**: 40+ typed events (mouse, camera, data, errors), `On("name")` for any other one, per-layer events,
+  marker, popup, control and plugin events; high-frequency events are throttled.
+- **Annotations and controls**: markers (custom HTML, drag, popup), popups, navigation, scale, fullscreen, geolocation,
+  attribution, terrain, globe, and `HtmlControl` (an HTML control whose commands are raised in .NET).
+- **Plugins**: Draw (drawing and editing), Geocoder (Nominatim, a .NET provider, or Mapbox), Directions (Mapbox), Turf.js;
+  `ScriptPlugin` / `MapPlugin` to write your own (commands, events, JS → .NET calls).
+- **Extensions**: clusters, heatmap, 3D buildings, 3D terrain (keyless AWS Terrain Tiles with MapLibre), feature-state
+  hover and selection, click popups from a template, automatic GeoJSON layers, WMS/XYZ raster overlays.
+- **Robustness**: calls are queued until the map is loaded, timeouts, typed exceptions, user layers restored after a
+  style change, automatic reload after a renderer crash, links opened in the default browser, clear message when the
+  WebView2 runtime is missing.
+- **Escape hatches**: `InvokeAsync("method", …)` to call any engine method, `EvalAsync(js)`, `RegisterHostCallback`
+  (call .NET from JavaScript).
+- **Export**: PNG/JPEG capture and PDF.
 
-## Fonds de carte et services
+## Basemaps and services
 
-| Usage | Sans compte | Avec Mapbox |
+| Need | Without an account | With Mapbox |
 |---|---|---|
-| Fonds de carte | OpenFreeMap (`MapStyles.OpenFreeMap*`), ou tout style MapLibre (MapTiler, Stadia, vos tuiles…) | Styles `mapbox://` dont Standard |
-| Recherche de lieux | Nominatim / fournisseur .NET | Mapbox Geocoding |
-| Terrain 3D | AWS Terrain Tiles | Mapbox Terrain DEM |
-| Itinéraires | Votre service (ligne GeoJSON) | Plugin Directions, `Cartovia.Mapbox.Services` |
+| Basemaps | OpenFreeMap (`MapStyles.OpenFreeMap*`), or any MapLibre style (MapTiler, Stadia, your own tiles…) | `mapbox://` styles including Standard |
+| Place search | Nominatim / your .NET provider | Mapbox Geocoding |
+| 3D terrain | AWS Terrain Tiles | Mapbox Terrain DEM |
+| Routing | Your own service (GeoJSON line) | Directions plugin, `Cartovia.Mapbox.Services` |
 
-OpenFreeMap et Nominatim sont gratuits mais sans garantie de service ; pour une application à fort trafic, prévoyez un
-fournisseur commercial ou vos propres tuiles.
+OpenFreeMap and Nominatim are free but come without a service-level guarantee; for high-traffic apps, use a commercial
+provider or host your own tiles.
 
-## Hors ligne / assets locaux
+## Offline / local assets
 
-Les moteurs et plugins sont chargés par défaut depuis les CDN officiels. Pour s'en passer :
+Engines and plugins are loaded from their official CDNs by default. To ship them with your app:
 
 ```powershell
 ./tools/download-offline-assets.ps1 -Destination ./assets
 ```
 
 ```csharp
-mapView.HostOptions.LocalAssetsFolder = @"C:\MonApp\assets";
+mapView.HostOptions.LocalAssetsFolder = @"C:\MyApp\assets";
 mapView.Options.EngineScriptUrl = WebView2HostOptions.LocalAssetsBaseUrl + "maplibre-gl.js";
 mapView.Options.EngineStylesheetUrl = WebView2HostOptions.LocalAssetsBaseUrl + "maplibre-gl.css";
 ```
 
-## Points d'attention
+## Good to know
 
-- **Runtime WebView2** : intégré à Windows 11 et quasi universel sous Windows 10 ; sinon le contrôle affiche un lien de téléchargement.
-- **WPF « airspace »** : la WebView2 classique est une fenêtre native ; `UseCompositionControl = true` permet de superposer du contenu WPF.
-- **Mapbox** : token obligatoire, facturation au chargement de carte ; un token restreint par URL doit autoriser `https://cartovia.local`.
-- **.NET 6** est hors support Microsoft mais reste une cible compilée ; les tests tournent sous .NET 8 et .NET 10.
+- **WebView2 runtime**: built into Windows 11 and nearly universal on Windows 10; otherwise the control shows a download link.
+- **WPF "airspace"**: the classic WebView2 is a native window; set `UseCompositionControl = true` to draw WPF content over the map.
+- **Mapbox**: an access token is required and Mapbox bills per map load; a URL-restricted token must allow `https://cartovia.local`.
+- **.NET 6** is out of Microsoft support but remains a compiled target; tests run on .NET 8 and .NET 10.
 
-## Développement
+## Development
 
 ```bash
 dotnet build Cartovia.sln
@@ -129,22 +131,22 @@ dotnet test Cartovia.sln
 dotnet run --project samples/Cartovia.Samples.Wpf
 ```
 
-Les démos utilisent MapLibre + OpenFreeMap, ou Mapbox si la variable d'environnement `MAPBOX_ACCESS_TOKEN` est définie.
+The samples use MapLibre + OpenFreeMap, or Mapbox when the `MAPBOX_ACCESS_TOKEN` environment variable is set.
 
-Régénérer les couches pour une nouvelle version des spécifications :
+Regenerate the layers for a new version of the style specifications:
 
 ```bash
 python tools/generate_style_spec.py --mapbox-version 14.34.2 --maplibre-version 26.5.1
 ```
 
-## Publication NuGet
+## Publishing to NuGet
 
-- Version : `VersionPrefix` dans `Directory.Build.props` (ou `-p:Version=x.y.z`).
-- Local : `dotnet pack Cartovia.sln -c Release -o artifacts`.
-- CI : `.github/workflows/ci.yml` compile et teste à chaque push ; un tag `v1.2.3` crée les packages (symboles `.snupkg`,
-  SourceLink) et les publie sur nuget.org via le secret `NUGET_API_KEY`.
+- Version: `VersionPrefix` in `Directory.Build.props` (or `-p:Version=x.y.z`).
+- Locally: `dotnet pack Cartovia.sln -c Release -o artifacts`.
+- CI: `.github/workflows/ci.yml` builds and tests on every push; a `v1.2.3` tag packs the libraries (`.snupkg` symbols,
+  SourceLink) and publishes them to nuget.org using the `NUGET_API_KEY` secret.
 
-## Licence
+## License
 
-MIT. MapLibre GL JS est sous licence BSD-3-Clause ; Mapbox GL JS, ses plugins et les services Mapbox sont soumis aux
-[conditions de Mapbox](https://www.mapbox.com/legal/tos). Cartovia n'est affilié ni à MapLibre ni à Mapbox.
+MIT. MapLibre GL JS is BSD-3-Clause licensed; Mapbox GL JS, its plugins and the Mapbox services are subject to the
+[Mapbox Terms of Service](https://www.mapbox.com/legal/tos). Cartovia is not affiliated with MapLibre or Mapbox.
