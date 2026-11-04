@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -26,6 +26,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cartovia.Samples.Wpf", "samples\Cartovia.Samples.Wpf\Cartovia.Samples.Wpf.csproj", "{0FD46F28-73B6-4E3A-88BC-8D15F86A97C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cartovia.Samples.WinForms", "samples\Cartovia.Samples.WinForms\Cartovia.Samples.WinForms.csproj", "{C2F5E5FE-6AA9-4B86-855C-05F0424A4313}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cartovia.Avalonia", "src\Cartovia.Avalonia\Cartovia.Avalonia.csproj", "{5ECA696F-E285-4AE6-9544-2186E30AF5D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cartovia.Samples.Avalonia", "samples\Cartovia.Samples.Avalonia\Cartovia.Samples.Avalonia.csproj", "{05ECB992-C605-4A43-BCE6-A21D698005ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,6 +149,30 @@ Global
 		{C2F5E5FE-6AA9-4B86-855C-05F0424A4313}.Release|x64.Build.0 = Release|Any CPU
 		{C2F5E5FE-6AA9-4B86-855C-05F0424A4313}.Release|x86.ActiveCfg = Release|Any CPU
 		{C2F5E5FE-6AA9-4B86-855C-05F0424A4313}.Release|x86.Build.0 = Release|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Debug|x64.Build.0 = Debug|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Debug|x86.Build.0 = Debug|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Release|x64.ActiveCfg = Release|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Release|x64.Build.0 = Release|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Release|x86.ActiveCfg = Release|Any CPU
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9}.Release|x86.Build.0 = Release|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Debug|x64.Build.0 = Debug|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Debug|x86.Build.0 = Debug|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Release|x64.ActiveCfg = Release|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Release|x64.Build.0 = Release|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Release|x86.ActiveCfg = Release|Any CPU
+		{05ECB992-C605-4A43-BCE6-A21D698005ED}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,5 +187,7 @@ Global
 		{12FB91D9-9718-4596-A61F-1C73D0196F83} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{0FD46F28-73B6-4E3A-88BC-8D15F86A97C7} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
 		{C2F5E5FE-6AA9-4B86-855C-05F0424A4313} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
+		{5ECA696F-E285-4AE6-9544-2186E30AF5D9} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{05ECB992-C605-4A43-BCE6-A21D698005ED} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
 	EndGlobalSection
 EndGlobal

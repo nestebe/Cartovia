@@ -1,0 +1,113 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:carto="clr-namespace:Cartovia.Avalonia;assembly=Cartovia.Avalonia"
+        x:Class="Cartovia.Samples.Avalonia.MainWindow"
+        Title="Cartovia — Avalonia showcase" Width="1480" Height="940" MinWidth="1000" MinHeight="640"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource WindowBrush}">
+
+    <Grid ColumnDefinitions="300,*">
+
+        <!-- ===================== Sidebar ===================== -->
+        <Border Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="0,0,1,0">
+            <Grid RowDefinitions="Auto,*,Auto">
+
+                <StackPanel Margin="20,22,20,6">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Border Width="36" Height="36" CornerRadius="10" Background="{StaticResource LogoBrush}">
+                            <TextBlock Classes="icon" Text="&#xE707;" FontSize="18" Foreground="White" HorizontalAlignment="Center" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Cartovia" FontSize="20" FontWeight="SemiBold" />
+                            <TextBlock Text="Vector maps for .NET desktop" FontSize="12" Foreground="{StaticResource MutedBrush}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <Border Margin="0,16,0,0" Background="{StaticResource CardBrush}" CornerRadius="8" Padding="10,7"
+                            BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Ellipse x:Name="EngineDot" Width="8" Height="8" Fill="#F59E0B" VerticalAlignment="Center" />
+                            <TextBlock x:Name="EngineText" Text="Starting…" FontSize="12" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <ScrollViewer x:Name="Sidebar" Grid.Row="1" Padding="14,0,14,10">
+                    <StackPanel>
+                        <TextBlock Classes="section" Text="MAP STYLE" />
+                        <WrapPanel x:Name="StylePanel" Margin="2,0,0,0" />
+
+                        <TextBlock Classes="section" Text="FLY TO" />
+                        <WrapPanel Margin="2,0,0,0">
+                            <Button Classes="pill" Click="OnFlyParis"><StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Classes="icon" FontSize="12" Text="&#xE709;" /><TextBlock Text="Paris" /></StackPanel></Button>
+                            <Button Classes="pill" Click="OnFlyNewYork"><StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Classes="icon" FontSize="12" Text="&#xE709;" /><TextBlock Text="New York" /></StackPanel></Button>
+                            <Button Classes="pill" Click="OnFlyMontBlanc"><StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Classes="icon" FontSize="12" Text="&#xE709;" /><TextBlock Text="Mont Blanc" /></StackPanel></Button>
+                            <Button Classes="pill" Click="OnFlyTokyo"><StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Classes="icon" FontSize="12" Text="&#xE709;" /><TextBlock Text="Tokyo" /></StackPanel></Button>
+                            <Button Classes="pill" Click="OnResetNorth"><StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Classes="icon" FontSize="12" Text="&#xE7AD;" /><TextBlock Text="Reset view" /></StackPanel></Button>
+                        </WrapPanel>
+
+                        <TextBlock Classes="section" Text="LAYERS" />
+                        <Border Classes="card">
+                            <StackPanel Margin="10,4">
+                                <Grid ColumnDefinitions="28,*,Auto" Height="38"><TextBlock Classes="icon" Text="&#xE716;" /><TextBlock Grid.Column="1" Text="Cities" VerticalAlignment="Center" /><ToggleSwitch x:Name="CitiesToggle" Grid.Column="2" Classes="row" Click="OnToggleCities" /></Grid>
+                                <Grid ColumnDefinitions="28,*,Auto" Height="38"><TextBlock Classes="icon" Text="&#xE71D;" /><TextBlock Grid.Column="1" Text="Clustered points" VerticalAlignment="Center" /><ToggleSwitch x:Name="ClustersToggle" Grid.Column="2" Classes="row" Click="OnToggleClusters" /></Grid>
+                                <Grid ColumnDefinitions="28,*,Auto" Height="38"><TextBlock Classes="icon" Text="&#xE9D2;" /><TextBlock Grid.Column="1" Text="Heatmap" VerticalAlignment="Center" /><ToggleSwitch x:Name="HeatmapToggle" Grid.Column="2" Classes="row" Click="OnToggleHeatmap" /></Grid>
+                                <Grid ColumnDefinitions="28,*,Auto" Height="38"><TextBlock Classes="icon" Text="&#xE80F;" /><TextBlock Grid.Column="1" Text="3D buildings" VerticalAlignment="Center" /><ToggleSwitch x:Name="BuildingsToggle" Grid.Column="2" Classes="row" Click="OnToggleBuildings" /></Grid>
+                                <Grid ColumnDefinitions="28,*,Auto" Height="38"><TextBlock Classes="icon" Text="&#xE909;" /><TextBlock Grid.Column="1" Text="3D terrain" VerticalAlignment="Center" /><ToggleSwitch x:Name="TerrainToggle" Grid.Column="2" Classes="row" Click="OnToggleTerrain" /></Grid>
+                                <Grid ColumnDefinitions="28,*,Auto" Height="38"><TextBlock Classes="icon" Text="&#xE774;" /><TextBlock Grid.Column="1" Text="Globe projection" VerticalAlignment="Center" /><ToggleSwitch x:Name="GlobeToggle" Grid.Column="2" Classes="row" Click="OnToggleGlobe" /></Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Classes="section" Text="TOOLS" />
+                        <Border Classes="card">
+                            <StackPanel Margin="10,4">
+                                <Grid ColumnDefinitions="28,*,Auto" Height="38"><TextBlock Classes="icon" Text="&#xE70F;" /><TextBlock Grid.Column="1" Text="Draw &amp; edit shapes" VerticalAlignment="Center" /><ToggleSwitch x:Name="DrawToggle" Grid.Column="2" Classes="row" Click="OnToggleDraw" /></Grid>
+                                <Grid ColumnDefinitions="28,*,Auto" Height="38"><TextBlock Classes="icon" Text="&#xE721;" /><TextBlock Grid.Column="1" Text="Place search" VerticalAlignment="Center" /><ToggleSwitch x:Name="SearchToggle" Grid.Column="2" Classes="row" Click="OnToggleSearch" /></Grid>
+                            </StackPanel>
+                        </Border>
+                        <Border Classes="card" Margin="0,6,0,0">
+                            <StackPanel>
+                                <Button Classes="action" Click="OnAddMarker"><Grid ColumnDefinitions="28,*"><TextBlock Classes="icon" Text="&#xE718;" /><TextBlock Grid.Column="1" Text="Drop a draggable marker" /></Grid></Button>
+                                <Button Classes="action" Click="OnTurf"><Grid ColumnDefinitions="28,*"><TextBlock Classes="icon" Text="&#xE8EF;" /><TextBlock Grid.Column="1" Text="2 km buffer (Turf.js)" /></Grid></Button>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Classes="section" Text="EXPORT" />
+                        <WrapPanel Margin="2,0,0,0">
+                            <Button Classes="pill" Click="OnScreenshot"><StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Classes="icon" FontSize="12" Text="&#xE722;" /><TextBlock Text="Screenshot" /></StackPanel></Button>
+                            <Button Classes="pill" Click="OnPdf"><StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Classes="icon" FontSize="12" Text="&#xE749;" /><TextBlock Text="PDF" /></StackPanel></Button>
+                            <Button Classes="pill" Click="OnShowLog"><StackPanel Orientation="Horizontal" Spacing="6"><TextBlock Classes="icon" FontSize="12" Text="&#xE9D9;" /><TextBlock Text="Events" /></StackPanel></Button>
+                        </WrapPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <TextBlock Grid.Row="2" Margin="20,8,20,14" FontSize="11" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap"
+                           Text="MapLibre GL JS or Mapbox GL JS · WebView2 · Avalonia 12" />
+            </Grid>
+        </Border>
+
+        <!-- ===================== Map area ===================== -->
+        <Grid Grid.Column="1" RowDefinitions="*,Auto,Auto">
+            <carto:MapView x:Name="MapView" Center="2.3470, 48.8540" Zoom="15.6" Pitch="60" Bearing="-24" />
+
+            <Border x:Name="LogPanel" Grid.Row="1" Height="150" Background="{StaticResource SidebarBrush}"
+                    BorderBrush="{StaticResource StrokeBrush}" BorderThickness="0,1,0,0" IsVisible="False">
+                <ListBox x:Name="EventLog" Background="Transparent" Padding="10,6" FontFamily="Cascadia Mono, Consolas"
+                         FontSize="11.5" Foreground="#B9C3D6" />
+            </Border>
+
+            <Border Grid.Row="2" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="0,1,0,0" Padding="16,7">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Classes="icon" FontSize="12" Text="&#xE81D;" />
+                    <TextBlock FontSize="12" Text="{Binding #MapView.Center}" Margin="0,0,12,0" />
+                    <TextBlock FontSize="12" Text="Zoom" Foreground="{StaticResource MutedBrush}" />
+                    <TextBlock FontSize="12" Text="{Binding #MapView.Zoom, StringFormat='{}{0:0.00}'}" Margin="0,0,12,0" />
+                    <TextBlock FontSize="12" Text="Bearing" Foreground="{StaticResource MutedBrush}" />
+                    <TextBlock FontSize="12" Text="{Binding #MapView.Bearing, StringFormat='{}{0:0}°'}" Margin="0,0,12,0" />
+                    <TextBlock FontSize="12" Text="Pitch" Foreground="{StaticResource MutedBrush}" />
+                    <TextBlock FontSize="12" Text="{Binding #MapView.Pitch, StringFormat='{}{0:0}°'}" Margin="0,0,12,0" />
+                    <TextBlock FontSize="12" Text="Pointer" Foreground="{StaticResource MutedBrush}" />
+                    <TextBlock x:Name="PointerText" FontSize="12" Text="—" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

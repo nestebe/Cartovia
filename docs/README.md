@@ -21,6 +21,7 @@ and that `map` is the `CartoviaMap` of a control (`mapView.Map`).
 | [Getting started](getting-started.md) | Install, first map, engines, styles, tokens, WebView2 runtime |
 | [WPF control](wpf.md) | XAML, bindable camera, MVVM commands, composition mode, export |
 | [Windows Forms control](winforms.md) | Designer properties, events, export |
+| [Avalonia control](avalonia.md) | AXAML, styled properties, two-way camera, hosting notes |
 | [Map and camera](map-and-camera.md) | Lifecycle, `MapOptions`, fly / ease / fit, projection, interaction handlers |
 | [Sources and layers](sources-and-layers.md) | GeoJSON / vector / raster sources, typed layers, updating properties, images, 3D, terrain, fog, lights |
 | [Expressions](expressions.md) | Data-driven and zoom-driven styling with `Expr` |
@@ -36,7 +37,7 @@ and that `map` is the `CartoviaMap` of a control (`mapView.Map`).
 ## Architecture in one picture
 
 ```
- your app (WPF / WinForms)
+ your app (WPF / WinForms / Avalonia)
         │  MapView control
         ▼
  CartoviaMap  ── typed C# API, events, plugins          (Cartovia.Core)

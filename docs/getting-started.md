@@ -6,9 +6,10 @@
 |---|---|
 | WPF | `dotnet add package Cartovia.Wpf` |
 | Windows Forms | `dotnet add package Cartovia.WinForms` |
+| Avalonia 12 | `dotnet add package Cartovia.Avalonia` (`net8.0-windows` / `net10.0-windows`) |
 | Mapbox REST APIs (optional) | `dotnet add package Cartovia.Mapbox.Services` |
 
-Target frameworks: `net6.0-windows`, `net8.0-windows`, `net10.0-windows`.
+Target frameworks: `net6.0-windows`, `net8.0-windows`, `net10.0-windows` (Avalonia: `net8.0-windows`, `net10.0-windows`).
 The control needs the **Microsoft Edge WebView2 Runtime**, built into Windows 11 and installed on nearly every
 Windows 10 machine. When it is missing, the control shows a message with a download link
 (see [Advanced topics](advanced.md#webview2-runtime)).
@@ -90,6 +91,6 @@ Any style URL or inline style JSON works (`MapOptions.Style`, `MapOptions.StyleJ
 
 ## Next steps
 
-- [WPF control](wpf.md) or [Windows Forms control](winforms.md)
+- [WPF control](wpf.md), [Windows Forms control](winforms.md) or [Avalonia control](avalonia.md)
 - [Sources and layers](sources-and-layers.md) to display your data
 - [Events](events.md) to react to clicks and camera moves

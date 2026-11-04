@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CartoviaAvaloniaTargets)</TargetFrameworks>
+    <AssemblyName>Cartovia.Avalonia</AssemblyName>
+    <RootNamespace>Cartovia.Avalonia</RootNamespace>
+    <PackageId>Cartovia.Avalonia</PackageId>
+    <Description>Cartovia Avalonia map control: vector maps with MapLibre GL JS (no account needed) or Mapbox GL JS, hosted in WebView2 (Windows): every layer type and style property, expressions, markers, popups, controls, plugins, events and a bindable two-way camera.</Description>
+    <PackageTags>$(PackageTags);avalonia;axaml;mvvm</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Microsoft.Web.WebView2" />
+  </ItemGroup>
+
+  <!-- Removes the WebView2 WPF reference (warning MSB3277) in consumer Avalonia apps. -->
+  <ItemGroup>
+    <None Include="..\..\build\Cartovia.RemoveWebView2Wpf.targets" Pack="true" PackagePath="buildTransitive\Cartovia.Avalonia.targets" Visible="false" />
+    <None Include="..\..\build\Cartovia.RemoveWebView2Wpf.targets" Pack="true" PackagePath="build\Cartovia.Avalonia.targets" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cartovia.WebView2\Cartovia.WebView2.csproj" />
+  </ItemGroup>
+
+</Project>

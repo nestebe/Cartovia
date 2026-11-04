@@ -2,14 +2,14 @@
 
 # Cartovia
 
-**Modern vector maps for .NET desktop apps — WPF and Windows Forms**
+**Modern vector maps for .NET desktop apps — WPF, Windows Forms and Avalonia**
 
 MapLibre GL JS (open source, no account needed) or Mapbox GL JS · WebView2 · .NET 6 / 8 / 10
 
 [![CI](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml/badge.svg)](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-6366F1.svg)](LICENSE)
 ![.NET](https://img.shields.io/badge/.NET-6%20%7C%208%20%7C%2010-512BD4)
-![Platforms](https://img.shields.io/badge/UI-WPF%20%7C%20WinForms-0EA5E9)
+![Platforms](https://img.shields.io/badge/UI-WPF%20%7C%20WinForms%20%7C%20Avalonia-0EA5E9)
 ![Engines](https://img.shields.io/badge/engines-MapLibre%20%7C%20Mapbox-22C55E)
 
 **English** · [Français](README.fr.md)
@@ -27,7 +27,7 @@ Mapbox GL JS is available as an option, with the same API.
 
 Guides with examples for every feature live in [**docs/**](docs/README.md):
 [Getting started](docs/getting-started.md) ·
-[WPF](docs/wpf.md) · [WinForms](docs/winforms.md) ·
+[WPF](docs/wpf.md) · [WinForms](docs/winforms.md) · [Avalonia](docs/avalonia.md) ·
 [Map & camera](docs/map-and-camera.md) ·
 [Sources & layers](docs/sources-and-layers.md) ·
 [Expressions](docs/expressions.md) ·
@@ -46,6 +46,7 @@ Guides with examples for every feature live in [**docs/**](docs/README.md):
 |---|---|
 | `Cartovia.Wpf` | WPF `MapView` control (bindable properties, two-way camera, MVVM commands) |
 | `Cartovia.WinForms` | Windows Forms `MapView` control |
+| `Cartovia.Avalonia` | Avalonia 12 `MapView` control (styled properties, two-way camera, commands) — .NET 8 / 10 |
 | `Cartovia.Core` | UI-agnostic typed API: camera, sources, **every style layer and property**, expressions, annotations, plugins, events, GeoJSON |
 | `Cartovia.WebView2` | Shared WebView2 host (embedded page, messaging, navigation, permissions, PNG capture, PDF export) |
 | `Cartovia.Mapbox.Services` | Optional Mapbox extension: REST clients for Geocoding, Search Box, Directions, Matrix, Isochrone, Optimization, Map Matching, Static Images, Tilequery |
@@ -146,6 +147,7 @@ mapView.Options.EngineStylesheetUrl = WebView2HostOptions.LocalAssetsBaseUrl + "
 dotnet build Cartovia.sln
 dotnet test Cartovia.sln
 dotnet run --project samples/Cartovia.Samples.Wpf
+dotnet run --project samples/Cartovia.Samples.Avalonia
 ```
 
 The samples use MapLibre + OpenFreeMap, or Mapbox when the `MAPBOX_ACCESS_TOKEN` environment variable is set.

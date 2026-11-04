@@ -17,6 +17,7 @@
     <InternalsVisibleTo Include="Cartovia.WebView2" />
     <InternalsVisibleTo Include="Cartovia.Wpf" />
     <InternalsVisibleTo Include="Cartovia.WinForms" />
+    <InternalsVisibleTo Include="Cartovia.Avalonia" />
   </ItemGroup>
 
   <ItemGroup>
