@@ -95,7 +95,8 @@ MapLibre GL JS 6+ is distributed as ES modules only; Cartovia uses the latest 5.
 
 ## Errors and timeouts
 
-- Engine errors in a call throw `MapException` (`Command`, `ScriptStack`).
+- Engine errors in a call throw `MapException` (`Command`, `ScriptStack`), including style errors the engine only
+  reports through its `error` event (unknown source, invalid property value…).
 - Initialization failures throw `MapInitializationException` and raise `Error` with `IsFatal = true`.
 - Calls time out after `MapOptions.CallTimeout` (30 s) with a `TimeoutException`; every method accepts a `CancellationToken`.
 - Script errors and bridge warnings are reported through `map.Log`.
@@ -107,7 +108,8 @@ thread. Awaiting with `ConfigureAwait(false)` inside library code is safe.
 
 ## Hosting in another UI framework
 
-`CartoviaMap` only needs an `IMapHost` (send a JSON string, raise a message event). `Cartovia.WebView2` provides
+`CartoviaMap` only needs an `IMapHost` (send a JSON string, raise a message event); implement `IMapDataHost` too to
+serve large data and files through URLs (`DataRange` helps with HTTP range requests). `Cartovia.WebView2` provides
 `MapViewController` for any WebView2-based framework; for another web view, serve the embedded page
 (`MapWebAssets.Open("index.html")`) and relay messages with `chrome.webview`-compatible semantics.
 
@@ -128,6 +130,8 @@ For installers, Microsoft provides the Evergreen bootstrapper and a fixed-versio
 |---|---|
 | Blank map, `Error` with `IsFatal` | Engine script not reachable (proxy, offline): use local assets |
 | "A Mapbox access token is required" | Set `AccessToken` or switch to `Engine = MapEngine.MapLibre` |
+| 401 / 403 on a private tile server | Add a [request rule](production.md#authenticated-tile-servers-request-rules) with the header or key |
+| UI freezes when loading a big GeoJSON | Keep `LargeDataThreshold` enabled, or use `PublishFile` / PMTiles |
 | 401 / 403 on Mapbox tiles | Token scopes or URL restriction: allow `https://cartovia.local` |
 | Labels missing for a layer | `TextFont` not available in the style glyphs |
 | Layers disappear after `SetStyleAsync` | Only layers added through Cartovia are restored; check `PreserveUserLayersOnStyleChange` |

@@ -122,7 +122,11 @@ public sealed partial class CartoviaMap
 
     /// <summary>Adds a source.</summary>
     public Task AddSourceAsync(Source source, CancellationToken cancellationToken = default)
-        => InvokeAsync("addSource", cancellationToken, source.Id, source.ToJson());
+    {
+        var json = source.ToJson();
+        if (source is GeoJsonSource g) json["data"] = PrepareGeoJsonData(g.Id, g.Data);
+        return InvokeAsync("addSource", cancellationToken, source.Id, json);
+    }
 
     /// <summary>Removes a source (its layers must be removed first).</summary>
     public Task RemoveSourceAsync(string sourceId, CancellationToken cancellationToken = default)
@@ -147,8 +151,12 @@ public sealed partial class CartoviaMap
     /// <param name="sourceId">Source id.</param>
     /// <param name="data">A <see cref="GeoJsonObject"/>, a URL, a raw GeoJSON <see cref="JsonNode"/> or any serializable object.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
+    /// <remarks>
+    /// Large data (see <see cref="MapOptions.LargeDataThreshold"/>) is served to the engine through a URL instead of a
+    /// message, so it is parsed in a web worker without freezing the UI.
+    /// </remarks>
     public Task SetGeoJsonDataAsync(string sourceId, object data, CancellationToken cancellationToken = default)
-        => InvokeSourceAsync(sourceId, "setData", cancellationToken, data);
+        => InvokeSourceAsync(sourceId, "setData", cancellationToken, PrepareGeoJsonData(sourceId, data));
 
     /// <summary>
     /// Applies a partial update to a GeoJSON source (<c>updateData</c>): <paramref name="diff"/> follows the engine's
@@ -189,6 +197,24 @@ public sealed partial class CartoviaMap
     /// <summary>Adds a layer from raw style JSON.</summary>
     public Task AddLayerAsync(JsonObject layer, string? beforeLayerId = null, CancellationToken cancellationToken = default)
         => InvokeAsync("addLayer", cancellationToken, layer, beforeLayerId);
+
+    /// <summary>
+    /// Adds a custom WebGL layer defined in JavaScript (e.g. three.js / deck.gl rendering, custom shaders).
+    /// <paramref name="script"/> is an expression evaluating to a layer object with <c>onAdd(map, gl)</c>,
+    /// <c>render(gl, args)</c> and optionally <c>onRemove</c> / <c>prerender</c> / <c>renderingMode</c>; <c>map</c>,
+    /// <c>lib</c> and <c>Cartovia</c> are in scope. Custom layers are not restored after a style change.
+    /// </summary>
+    /// <example><code>
+    /// await map.AddCustomLayerAsync("glow", "{ onAdd: function (map, gl) { /* compile shaders */ }, render: function (gl, args) { /* draw */ } }");
+    /// </code></example>
+    public Task AddCustomLayerAsync(string id, string script, string? beforeLayerId = null, bool threeDimensional = false, CancellationToken cancellationToken = default)
+        => CallAsync("layer.addCustom", new JsonObject
+        {
+            ["id"] = id,
+            ["script"] = script,
+            ["before"] = beforeLayerId,
+            ["renderingMode"] = threeDimensional ? "3d" : "2d",
+        }, cancellationToken, Readiness.Loaded);
 
     /// <summary>Removes a layer.</summary>
     public Task RemoveLayerAsync(string layerId, CancellationToken cancellationToken = default)

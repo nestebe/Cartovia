@@ -21,6 +21,9 @@ await map.AddSourceAsync(new GeoJsonSource("earthquakes", "https://example.com/e
 await map.SetGeoJsonDataAsync("cities", updatedCollection);
 ```
 
+Large GeoJSON (above `MapOptions.LargeDataThreshold`, 512 KB) is served to the engine through a URL instead of a
+message, and files can be streamed with `map.PublishFile(path)` — see the [production guide](production.md#large-datasets).
+
 Useful `GeoJsonSource` options: `Cluster`, `ClusterRadius`, `ClusterMaxZoom`, `ClusterProperties`, `GenerateId`,
 `PromoteId`, `LineMetrics` (required by `line-gradient`), `Tolerance`, `Buffer`, `MaxZoom`, `Filter`, `Dynamic`.
 
@@ -48,7 +51,9 @@ await map.AddSourceAsync(new ImageSource("plan", "https://example.com/plan.png",
     topLeft: new LngLat(2.29, 48.86), topRight: new LngLat(2.30, 48.86),
     bottomRight: new LngLat(2.30, 48.85), bottomLeft: new LngLat(2.29, 48.85)));
 
-await map.AddSourceAsync(new RawSource("custom", JsonNode.Parse("""{ "type": "vector", "url": "pmtiles://…" }""")!.AsObject()));
+await map.AddSourceAsync(new RawSource("custom", JsonNode.Parse("""{ "type": "vector", "url": "https://tiles.example.com/v.json" }""")!.AsObject()));
+
+// PMTiles archives (MapLibre, PmTilesPlugin): new VectorSource("osm", PmTilesPlugin.Url(map.PublishFile(@"C:\maps\osm.pmtiles")))
 ```
 
 ### Managing sources
@@ -154,6 +159,14 @@ JsonObject? json = await map.GetLayerAsync("labels");
 JsonElement color = await map.GetPaintPropertyAsync("parcels-fill", "fill-color");
 await map.TryRemoveLayerAsync("labels");
 ```
+
+### Custom WebGL layers
+
+```csharp
+await map.AddCustomLayerAsync("glow", "{ onAdd: function (map, gl) { }, render: function (gl, args) { } }");
+```
+
+See the [production guide](production.md#custom-webgl-layers).
 
 ### Any property by name
 

@@ -226,6 +226,14 @@ public sealed class MapOptions
     /// <summary>Raw options merged last into the map constructor options (escape hatch for anything not modelled).</summary>
     public JsonObject AdditionalMapOptions { get; private set; } = new();
 
+    // ---------------- requests ----------------
+
+    /// <summary>
+    /// Rules modifying the requests of the engine (headers, query parameters, credentials) — e.g. to authenticate
+    /// against a private tile server. Update them later with <see cref="CartoviaMap.SetRequestRulesAsync"/>.
+    /// </summary>
+    public IList<RequestRule> RequestRules { get; private set; } = new List<RequestRule>();
+
     // ---------------- controls added at startup ----------------
 
     /// <summary>Controls added when the map is created.</summary>
@@ -242,6 +250,13 @@ public sealed class MapOptions
     /// <summary>Minimum interval between two high-frequency events (move, mousemove, drag…). Default: 16 ms.</summary>
     public TimeSpan EventThrottle { get; set; } = TimeSpan.FromMilliseconds(16);
 
+    /// <summary>
+    /// GeoJSON larger than this size (in bytes) is served to the engine through a URL of the page origin instead of a
+    /// message (when the host supports it, as the WebView2 hosts do): the engine parses it in a web worker.
+    /// Default: 512 KB. 0 disables the optimization.
+    /// </summary>
+    public int LargeDataThreshold { get; set; } = 512 * 1024;
+
     /// <summary>Timeout of a call to the map engine. Default: 30 s.</summary>
     public TimeSpan CallTimeout { get; set; } = TimeSpan.FromSeconds(30);
 
@@ -252,6 +267,7 @@ public sealed class MapOptions
         c.AdditionalScripts = new List<string>(AdditionalScripts);
         c.AdditionalStylesheets = new List<string>(AdditionalStylesheets);
         c.InitialControls = new List<MapControl>(InitialControls);
+        c.RequestRules = new List<RequestRule>(RequestRules);
         c.AdditionalMapOptions = (JsonObject)AdditionalMapOptions.DeepClone();
         c.StyleJson = (JsonObject?)StyleJson?.DeepClone();
         c.Config = (JsonObject?)Config?.DeepClone();

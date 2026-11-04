@@ -188,6 +188,7 @@ public sealed partial class CartoviaMap : IDisposable
             ["workerCount"] = o.WorkerCount,
             ["projection"] = mapbox ? null : o.Projection,
             ["preserveUserLayers"] = o.PreserveUserLayersOnStyleChange,
+            ["requestRules"] = RequestRule.ToJson(o.RequestRules),
             ["eventThrottleMs"] = Math.Max(0, o.EventThrottle.TotalMilliseconds),
             ["mapOptions"] = mo,
             ["subscriptions"] = subs,
@@ -281,6 +282,20 @@ public sealed partial class CartoviaMap : IDisposable
             ["stylesheets"] = new JsonArray((stylesheets ?? Array.Empty<string>()).Select(s => (JsonNode?)JsonValue.Create(s)).ToArray()),
             ["module"] = isModule,
         }, cancellationToken, Readiness.Created);
+
+    /// <summary>
+    /// Replaces the request rules (headers, query parameters, credentials) applied to the engine requests.
+    /// Takes effect for the next requests (already loaded tiles are not reloaded).
+    /// </summary>
+    /// <example><code>await map.SetRequestRulesAsync(new[] { new RequestRule("https://tiles.example.com/*").WithHeader("Authorization", "Bearer " + newToken) });</code></example>
+    public Task SetRequestRulesAsync(IEnumerable<RequestRule> rules, CancellationToken cancellationToken = default)
+    {
+        var list = rules?.ToList() ?? throw new ArgumentNullException(nameof(rules));
+        Options.RequestRules.Clear();
+        foreach (var r in list) Options.RequestRules.Add(r);
+        if (!_initSent) return Task.CompletedTask;
+        return CallAsync("requests.setRules", new JsonObject { ["rules"] = RequestRule.ToJson(list) }, cancellationToken, Readiness.Created);
+    }
 
     // ------------------------------------------------------------------ host callbacks (JS -> .NET calls)
 

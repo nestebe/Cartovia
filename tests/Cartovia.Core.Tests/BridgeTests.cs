@@ -40,6 +40,29 @@ public class BridgeTests
     }
 
     [Fact]
+    public async Task RequestRules_AreSentAtInitAndUpdatedAtRuntime()
+    {
+        var host = new FakeMapHost { Responder = _ => null };
+        var options = new MapOptions();
+        options.RequestRules.Add(new RequestRule("https://tiles.example.com/*")
+            .WithHeader("Authorization", "Bearer a").WithQueryParameter("key", "k").ForResourceTypes(RequestResourceType.Tile));
+        using var map = new CartoviaMap(host, options);
+        host.Ready();
+
+        var rule = host.Sent.Single(m => m["t"]!.GetValue<string>() == "init")["options"]!["requestRules"]![0]!;
+        Assert.Equal("https://tiles.example.com/*", rule["pattern"]!.GetValue<string>());
+        Assert.Equal("Bearer a", rule["headers"]!["Authorization"]!.GetValue<string>());
+        Assert.Equal("k", rule["query"]!["key"]!.GetValue<string>());
+        Assert.Equal("Tile", rule["types"]![0]!.GetValue<string>());
+
+        host.Created();
+        await map.SetRequestRulesAsync(new[] { new RequestRule("https://x/*") { Credentials = RequestCredentials.Include } });
+        var update = host.Calls("requests.setRules").Single()["args"]!["rules"]![0]!;
+        Assert.Equal("include", update["credentials"]!.GetValue<string>());
+        Assert.Single(map.Options.RequestRules);
+    }
+
+    [Fact]
     public void MapLibre_UsesMapLibreAssetsAndAttributionObject()
     {
         var host = new FakeMapHost();

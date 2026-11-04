@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CartoviaMauiTargets)</TargetFrameworks>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <AssemblyName>Cartovia.Maui</AssemblyName>
+    <RootNamespace>Cartovia.Maui</RootNamespace>
+    <PackageId>Cartovia.Maui</PackageId>
+    <Description>Cartovia .NET MAUI map control: vector maps with MapLibre GL JS (no account needed) or Mapbox GL JS on Windows (WinUI WebView2), with bindable two-way camera, every layer type and style property, expressions, markers, popups, controls, plugins and events. Other platforms show a placeholder.</Description>
+    <PackageTags>$(PackageTags);maui;dotnet-maui</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cartovia.Core\Cartovia.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <ProjectReference Include="..\Cartovia.WinUI\Cartovia.WinUI.csproj" />
+  </ItemGroup>
+
+</Project>

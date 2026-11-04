@@ -9,6 +9,10 @@
     <PackageVersion Include="Avalonia.Desktop" Version="12.1.5" />
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.5" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.5" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="2.6.5" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.120" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.64.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />

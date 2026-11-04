@@ -2,14 +2,14 @@
 
 # Cartovia
 
-**Cartes vectorielles modernes pour les applications desktop .NET — WPF, Windows Forms et Avalonia**
+**Cartes vectorielles modernes pour les applications desktop .NET — WPF, Windows Forms, Avalonia, WinUI 3 et .NET MAUI**
 
 MapLibre GL JS (open source, sans compte) ou Mapbox GL JS · WebView2 · .NET 6 / 8 / 10
 
 [![CI](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml/badge.svg)](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-6366F1.svg)](LICENSE)
 ![.NET](https://img.shields.io/badge/.NET-6%20%7C%208%20%7C%2010-512BD4)
-![Platforms](https://img.shields.io/badge/UI-WPF%20%7C%20WinForms%20%7C%20Avalonia-0EA5E9)
+![Platforms](https://img.shields.io/badge/UI-WPF%20%7C%20WinForms%20%7C%20Avalonia%20%7C%20WinUI%203%20%7C%20MAUI-0EA5E9)
 ![Engines](https://img.shields.io/badge/engines-MapLibre%20%7C%20Mapbox-22C55E)
 
 [English](README.md) · **Français**
@@ -27,7 +27,7 @@ d'OpenFreeMap ; Mapbox GL JS est disponible en option, avec la même API.
 
 Les guides détaillés avec exemples, en anglais, sont dans [**docs/**](docs/README.md) :
 [démarrage](docs/getting-started.md) ·
-[WPF](docs/wpf.md) · [WinForms](docs/winforms.md) · [Avalonia](docs/avalonia.md) ·
+[WPF](docs/wpf.md) · [WinForms](docs/winforms.md) · [Avalonia](docs/avalonia.md) · [WinUI 3](docs/winui.md) · [MAUI](docs/maui.md) ·
 [carte et caméra](docs/map-and-camera.md) ·
 [sources et couches](docs/sources-and-layers.md) ·
 [expressions](docs/expressions.md) ·
@@ -38,7 +38,9 @@ Les guides détaillés avec exemples, en anglais, sont dans [**docs/**](docs/REA
 [extensions](docs/extensions.md) ·
 [GeoJSON](docs/geojson.md) ·
 [services Mapbox](docs/mapbox-services.md) ·
-[sujets avancés](docs/advanced.md)
+[guide de production](docs/production.md) ·
+[sujets avancés](docs/advanced.md) ·
+[changelog](CHANGELOG.md)
 
 ## Packages
 
@@ -47,6 +49,8 @@ Les guides détaillés avec exemples, en anglais, sont dans [**docs/**](docs/REA
 | `Cartovia.Wpf` | Contrôle `MapView` WPF (propriétés bindables, caméra synchronisée, commandes MVVM) |
 | `Cartovia.WinForms` | Contrôle `MapView` Windows Forms |
 | `Cartovia.Avalonia` | Contrôle `MapView` Avalonia 12 (propriétés stylées, caméra bidirectionnelle, commandes) — .NET 8 / 10 |
+| `Cartovia.WinUI` | Contrôle `MapView` WinUI 3 (Windows App SDK) |
+| `Cartovia.Maui` | `MapView` .NET MAUI (Windows ; espace réservé sur les autres plateformes) |
 | `Cartovia.Core` | API typée indépendante de l'UI : caméra, sources, **toutes les couches et propriétés de style**, expressions, annotations, plugins, événements, GeoJSON |
 | `Cartovia.WebView2` | Hôte WebView2 partagé (page embarquée, messages, navigation, permissions, capture PNG, export PDF) |
 | `Cartovia.Mapbox.Services` | Extension Mapbox optionnelle : clients REST Geocoding, Search Box, Directions, Matrix, Isochrone, Optimization, Map Matching, Static Images, Tilequery |
@@ -106,6 +110,10 @@ Avec Mapbox : `Engine="Mapbox" AccessToken="pk.…" MapStyle="mapbox://styles/ma
   message clair si le runtime WebView2 manque.
 - **Échappatoires** : `InvokeAsync("méthode", …)` vers n'importe quelle méthode du moteur, `EvalAsync(js)`,
   `RegisterHostCallback` (appel .NET depuis le JavaScript).
+- **Production** : règles de requête (en-têtes, jetons, clés d'API pour les serveurs de tuiles privés, modifiables à
+  chaud), gros GeoJSON servis par URL et analysés dans un web worker, fichiers locaux diffusés vers la carte, PMTiles
+  (tuiles hors ligne en un seul fichier), couches WebGL personnalisées, erreurs de style remontées en exceptions — voir le
+  [guide de production](docs/production.md).
 - **Export** : capture PNG/JPEG et PDF.
 
 ## Fonds de carte et services
@@ -148,9 +156,16 @@ dotnet build Cartovia.sln
 dotnet test Cartovia.sln
 dotnet run --project samples/Cartovia.Samples.Wpf
 dotnet run --project samples/Cartovia.Samples.Avalonia
+dotnet run --project samples/Cartovia.Samples.WinUI
+dotnet run --project samples/Cartovia.Samples.Maui -f net10.0-windows10.0.19041.0
 ```
 
 Les démos utilisent MapLibre + OpenFreeMap, ou Mapbox si la variable d'environnement `MAPBOX_ACCESS_TOKEN` est définie.
+
+Tests : `tests/Cartovia.Core.Tests` (unitaires, hôte simulé), `tests/Cartovia.Mapbox.Services.Tests` (clients REST, HTTP
+simulé) et `tests/Cartovia.Integration.Tests` — tests de bout en bout qui exécutent le vrai pont et MapLibre GL JS dans
+Edge ou Chrome headless (Playwright). Les tests Mapbox GL JS s'exécutent quand `MAPBOX_ACCESS_TOKEN` est défini (aussi
+en secret de CI).
 
 Régénérer les couches pour une nouvelle version des spécifications :
 

@@ -7,6 +7,8 @@
 | WPF | `dotnet add package Cartovia.Wpf` |
 | Windows Forms | `dotnet add package Cartovia.WinForms` |
 | Avalonia 12 | `dotnet add package Cartovia.Avalonia` (`net8.0-windows` / `net10.0-windows`) |
+| WinUI 3 (Windows App SDK) | `dotnet add package Cartovia.WinUI` |
+| .NET MAUI (Windows) | `dotnet add package Cartovia.Maui` |
 | Mapbox REST APIs (optional) | `dotnet add package Cartovia.Mapbox.Services` |
 
 Target frameworks: `net6.0-windows`, `net8.0-windows`, `net10.0-windows` (Avalonia: `net8.0-windows`, `net10.0-windows`).
@@ -91,6 +93,7 @@ Any style URL or inline style JSON works (`MapOptions.Style`, `MapOptions.StyleJ
 
 ## Next steps
 
-- [WPF control](wpf.md), [Windows Forms control](winforms.md) or [Avalonia control](avalonia.md)
+- [WPF](wpf.md), [Windows Forms](winforms.md), [Avalonia](avalonia.md), [WinUI 3](winui.md) or [.NET MAUI](maui.md) control
+- [Production guide](production.md) before shipping
 - [Sources and layers](sources-and-layers.md) to display your data
 - [Events](events.md) to react to clicks and camera moves

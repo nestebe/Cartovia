@@ -18,6 +18,8 @@
     <InternalsVisibleTo Include="Cartovia.Wpf" />
     <InternalsVisibleTo Include="Cartovia.WinForms" />
     <InternalsVisibleTo Include="Cartovia.Avalonia" />
+    <InternalsVisibleTo Include="Cartovia.WinUI" />
+    <InternalsVisibleTo Include="Cartovia.Maui" />
   </ItemGroup>
 
   <ItemGroup>

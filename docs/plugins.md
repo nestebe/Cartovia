@@ -15,6 +15,7 @@ DrawPlugin? same = map.GetPlugin<DrawPlugin>();
 | `GeocoderPlugin` | both | Search box (Mapbox Geocoding, Nominatim or your own provider) |
 | `DirectionsPlugin` | Mapbox | Interactive routing UI (mapbox-gl-directions) |
 | `TurfPlugin` | both | Geospatial analysis with Turf.js |
+| `PmTilesPlugin` | MapLibre | Single-file vector / raster tilesets (PMTiles) |
 | `ScriptPlugin` / `MapPlugin` | both | Your own plugins |
 
 ## Draw
@@ -109,6 +110,17 @@ FeatureCollection within = await turf.PointsWithinPolygonAsync(points, polygon);
 // Any other Turf function
 JsonElement result = await turf.CallAsync("lineIntersect", lineA, lineB);
 ```
+
+## PMTiles (MapLibre)
+
+```csharp
+var pmtiles = await map.AddPluginAsync(new PmTilesPlugin());
+string url = map.PublishFile(@"C:\maps\region.pmtiles", "application/octet-stream");   // or an https:// URL
+var header = await pmtiles.GetHeaderAsync(url);
+await map.AddSourceAsync(new VectorSource("region", PmTilesPlugin.Url(url)));
+```
+
+See the [production guide](production.md#offline-tilesets-with-pmtiles-maplibre).
 
 ## Writing your own plugin
 

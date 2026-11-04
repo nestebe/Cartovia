@@ -160,6 +160,38 @@
     };
   });
 
+  // ------------------------------------------------------------------ PMTiles (MapLibre)
+  Cartovia.definePlugin('pmtiles', function (ctx) {
+    if (ctx.engine !== 'maplibre') throw new Error('PMTiles requires the MapLibre engine (addProtocol).');
+    var P = window.pmtiles;
+    if (!P) throw new Error('pmtiles is not loaded.');
+    if (!window.__cartoviaPmtiles) {
+      window.__cartoviaPmtiles = new P.Protocol();
+      ctx.lib.addProtocol('pmtiles', window.__cartoviaPmtiles.tile);
+    }
+    var protocol = window.__cartoviaPmtiles;
+    return {
+      commands: {
+        header: function (url) {
+          var archive = new P.PMTiles(url);
+          protocol.add(archive);
+          return archive.getHeader().then(function (h) {
+            return {
+              minZoom: h.minZoom, maxZoom: h.maxZoom, centerZoom: h.centerZoom,
+              bounds: [h.minLon, h.minLat, h.maxLon, h.maxLat], center: [h.centerLon, h.centerLat],
+              tileType: h.tileType
+            };
+          });
+        },
+        metadata: function (url) {
+          var archive = new P.PMTiles(url);
+          protocol.add(archive);
+          return archive.getMetadata();
+        }
+      }
+    };
+  });
+
   // ------------------------------------------------------------------ Turf
   Cartovia.definePlugin('turf', function (ctx) {
     if (!window.turf) throw new Error('turf.js is not loaded.');

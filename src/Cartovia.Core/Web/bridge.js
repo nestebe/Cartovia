@@ -16,8 +16,40 @@
     markers: new Map(), popups: new Map(), controls: new Map(), subs: new Map(), helpers: new Map(),
     plugins: new Map(), pluginFactories: new Map(), interactions: new Set(),
     userSources: new Map(), userLayers: new Set(), userImages: new Map(),
-    hostCalls: new Map(), hostCallId: 0, assets: new Map(), animId: 0
+    hostCalls: new Map(), hostCallId: 0, assets: new Map(), animId: 0,
+    requestRules: []
   };
+
+  // ------------------------------------------------------------------ request rules (transformRequest)
+
+  function compileRules(rules) {
+    return (rules || []).map(function (r) {
+      var re;
+      if (r.pattern.indexOf('regex:') === 0) re = new RegExp(r.pattern.substring(6), 'i');
+      else re = new RegExp('^' + r.pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$', 'i');
+      return { re: re, headers: r.headers || null, query: r.query || null, credentials: r.credentials || null, types: r.types || null };
+    });
+  }
+
+  function transformRequest(url, resourceType) {
+    var rules = state.requestRules;
+    if (!rules.length || !url) return { url: url };
+    var result = { url: url }, headers = null;
+    for (var i = 0; i < rules.length; i++) {
+      var r = rules[i];
+      if (r.types && resourceType && r.types.indexOf(resourceType) < 0) continue;
+      if (!r.re.test(url)) continue;
+      if (r.query) {
+        var parts = [];
+        for (var k in r.query) parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(r.query[k]));
+        if (parts.length) result.url += (result.url.indexOf('?') < 0 ? '?' : '&') + parts.join('&');
+      }
+      if (r.headers) { headers = headers || {}; for (var h in r.headers) headers[h] = r.headers[h]; }
+      if (r.credentials) result.credentials = r.credentials;
+    }
+    if (headers) result.headers = headers;
+    return result;
+  }
 
   // ------------------------------------------------------------------ messaging
 
@@ -476,10 +508,17 @@
     'map.invoke': async function (a) {
       var m = state.map, method = a.method, args = a.args || [];
       if (STYLE_MUTATORS[method]) await styleReady();
-      if (INTERCEPTED[method]) return ser(INTERCEPTED[method].apply(null, args));
-      var fn = m[method];
+      var fn = INTERCEPTED[method] || m[method];
       if (typeof fn !== 'function') throw new Error("The map has no method '" + method + "' (" + state.engine + ').');
-      var r = fn.apply(m, args);
+      // Engines report many style errors (unknown source, invalid property…) through the 'error' event instead
+      // of throwing: capture the errors raised synchronously by the call and turn them into a failed call.
+      var captured = null;
+      var onError = function (e) { if (!captured) captured = (e && e.error) || e; };
+      m.on('error', onError);
+      var r;
+      try { r = INTERCEPTED[method] ? fn.apply(null, args) : fn.apply(m, args); }
+      finally { m.off('error', onError); }
+      if (captured) throw new Error((captured && captured.message) || String(captured));
       if (r && typeof r.then === 'function') r = await r;
       return ser(r);
     },
@@ -501,6 +540,17 @@
     },
 
     'map.camera': function () { return camera(); },
+
+    'layer.addCustom': async function (a) {
+      await styleReady();
+      var layer = (new Function('map', 'lib', 'Cartovia', 'return (' + a.script + ');'))(state.map, state.lib, window.Cartovia);
+      if (!layer || typeof layer.render !== 'function') throw new Error('A custom layer must define a render(gl, args) function.');
+      layer.id = a.id;
+      layer.type = 'custom';
+      if (!layer.renderingMode) layer.renderingMode = a.renderingMode || '2d';
+      state.map.addLayer(layer, a.before || undefined);
+      return null;
+    },
 
     'map.handler': function (a) {
       var h = state.map[a.name];
@@ -697,6 +747,8 @@
       if (c) { state.map.removeControl(c); state.controls.delete(a.id); }
       return null;
     },
+
+    'requests.setRules': function (a) { state.requestRules = compileRules(a.rules); return null; },
 
     'events.on': function (a) { subscribe(a); return null; },
     'events.off': function (a) { unsubscribe(a.sid); return null; },
@@ -895,7 +947,8 @@
       try { var r = lib.setRTLTextPlugin(opts.rtlTextPluginUrl, null, true); if (r && r.catch) r.catch(function () { }); } catch (e) { /* already set */ }
     }
 
-    var mapOptions = Object.assign({}, opts.mapOptions || {}, { container: 'map' });
+    state.requestRules = compileRules(opts.requestRules);
+    var mapOptions = Object.assign({}, opts.mapOptions || {}, { container: 'map', transformRequest: transformRequest });
     var map;
     try {
       map = new lib.Map(mapOptions);

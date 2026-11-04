@@ -29,6 +29,9 @@ jobs:
             8.0.x
             10.0.x
 
+      - name: MAUI workload
+        run: dotnet workload install maui-windows
+
       - name: Version
         id: version
         shell: pwsh
@@ -45,6 +48,9 @@ jobs:
 
       - name: Test
         run: dotnet test Cartovia.sln -c Release --no-build --logger trx --results-directory TestResults
+        env:
+          # Optional: enables the Mapbox GL JS end-to-end tests (they are skipped without a token).
+          MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
 
       - name: Pack
         run: dotnet pack Cartovia.sln -c Release --no-build -o artifacts -p:Version=${{ steps.version.outputs.version }}

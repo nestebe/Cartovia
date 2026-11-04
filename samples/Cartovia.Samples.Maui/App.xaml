@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Cartovia.Samples.Maui.App">
+    <Application.Resources>
+        <Color x:Key="SidebarColor">#0F1626</Color>
+        <Color x:Key="CardColor">#151E31</Color>
+        <Color x:Key="StrokeColor">#22304A</Color>
+        <Color x:Key="MutedColor">#8391AB</Color>
+        <Style x:Key="Section" TargetType="Label">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{StaticResource MutedColor}" />
+            <Setter Property="Margin" Value="6,14,0,6" />
+        </Style>
+        <Style x:Key="Pill" TargetType="Button">
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="12,4" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="BackgroundColor" Value="{StaticResource CardColor}" />
+            <Setter Property="BorderColor" Value="{StaticResource StrokeColor}" />
+            <Setter Property="BorderWidth" Value="1" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="Margin" Value="0,0,6,6" />
+        </Style>
+    </Application.Resources>
+</Application>

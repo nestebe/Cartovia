@@ -19,11 +19,14 @@
     <CartoviaWindowsTargets>net6.0-windows;net8.0-windows;net10.0-windows</CartoviaWindowsTargets>
     <!-- Avalonia 12 supports .NET 8 and later. -->
     <CartoviaAvaloniaTargets>net8.0-windows;net10.0-windows</CartoviaAvaloniaTargets>
+    <!-- WinUI 3 (Windows App SDK) and .NET MAUI. -->
+    <CartoviaWinUITargets>net8.0-windows10.0.19041.0;net10.0-windows10.0.19041.0</CartoviaWinUITargets>
+    <CartoviaMauiTargets>net10.0;net10.0-windows10.0.19041.0</CartoviaMauiTargets>
   </PropertyGroup>
 
   <!-- ===== NuGet package metadata (applies to every packable project) ===== -->
   <PropertyGroup>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <Authors>Nicolas Estebe</Authors>
     <Company>Nicolas Estebe</Company>
     <Copyright>Copyright © Nicolas Estebe $([System.DateTime]::Now.Year)</Copyright>

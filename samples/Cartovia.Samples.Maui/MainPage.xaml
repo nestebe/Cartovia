@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:carto="clr-namespace:Cartovia.Maui;assembly=Cartovia.Maui"
+             x:Class="Cartovia.Samples.Maui.MainPage"
+             BackgroundColor="#0A0F1C">
+
+    <Grid ColumnDefinitions="300,*">
+
+        <!-- Sidebar -->
+        <Border BackgroundColor="{StaticResource SidebarColor}" Stroke="{StaticResource StrokeColor}" StrokeThickness="0">
+            <ScrollView Padding="14,18,14,14">
+                <VerticalStackLayout>
+                    <HorizontalStackLayout Spacing="12" Margin="6,0,0,0">
+                        <Border WidthRequest="36" HeightRequest="36" StrokeThickness="0" StrokeShape="RoundRectangle 10">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#818CF8" Offset="0" />
+                                    <GradientStop Color="#22D3EE" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Label Text="&#xE707;" FontFamily="Segoe Fluent Icons" FontSize="18" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="Cartovia" FontSize="20" FontAttributes="Bold" TextColor="White" />
+                            <Label Text="Vector maps for .NET desktop" FontSize="12" TextColor="{StaticResource MutedColor}" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <Border Margin="0,16,0,0" BackgroundColor="{StaticResource CardColor}" Stroke="{StaticResource StrokeColor}"
+                            StrokeShape="RoundRectangle 8" Padding="10,7">
+                        <HorizontalStackLayout Spacing="8">
+                            <Ellipse x:Name="EngineDot" WidthRequest="8" HeightRequest="8" Fill="#F59E0B" VerticalOptions="Center" />
+                            <Label x:Name="EngineText" Text="Starting…" FontSize="12" TextColor="White" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <Label Text="MAP STYLE" Style="{StaticResource Section}" />
+                    <FlexLayout x:Name="StylePanel" Wrap="Wrap" />
+
+                    <Label Text="FLY TO" Style="{StaticResource Section}" />
+                    <FlexLayout Wrap="Wrap">
+                        <Button Text="Paris" Style="{StaticResource Pill}" Clicked="OnFlyParis" />
+                        <Button Text="New York" Style="{StaticResource Pill}" Clicked="OnFlyNewYork" />
+                        <Button Text="Mont Blanc" Style="{StaticResource Pill}" Clicked="OnFlyMontBlanc" />
+                    </FlexLayout>
+
+                    <Label Text="LAYERS" Style="{StaticResource Section}" />
+                    <Border BackgroundColor="{StaticResource CardColor}" Stroke="{StaticResource StrokeColor}" StrokeShape="RoundRectangle 12" Padding="14,6">
+                        <VerticalStackLayout Spacing="2">
+                            <Grid ColumnDefinitions="*,Auto" HeightRequest="40">
+                                <Label Text="3D buildings" TextColor="White" VerticalOptions="Center" />
+                                <Switch x:Name="BuildingsSwitch" Grid.Column="1" Toggled="OnToggleBuildings" />
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto" HeightRequest="40">
+                                <Label Text="Cities" TextColor="White" VerticalOptions="Center" />
+                                <Switch x:Name="CitiesSwitch" Grid.Column="1" Toggled="OnToggleCities" />
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto" HeightRequest="40">
+                                <Label Text="Clustered points" TextColor="White" VerticalOptions="Center" />
+                                <Switch x:Name="ClustersSwitch" Grid.Column="1" Toggled="OnToggleClusters" />
+                            </Grid>
+                            <Grid ColumnDefinitions="*,Auto" HeightRequest="40">
+                                <Label Text="3D terrain" TextColor="White" VerticalOptions="Center" />
+                                <Switch x:Name="TerrainSwitch" Grid.Column="1" Toggled="OnToggleTerrain" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Label Margin="6,16,0,0" FontSize="11" TextColor="{StaticResource MutedColor}"
+                           Text="MapLibre GL JS or Mapbox GL JS · .NET MAUI (Windows) · WinUI WebView2" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+
+        <!-- Map -->
+        <Grid Grid.Column="1" RowDefinitions="*,Auto">
+            <carto:MapView x:Name="MapView" Center="2.3470, 48.8540" Zoom="15.6" Pitch="60" Bearing="-24" />
+            <Border Grid.Row="1" BackgroundColor="{StaticResource SidebarColor}" StrokeThickness="0" Padding="16,7">
+                <Label x:Name="StatusText" FontSize="12" TextColor="White" Text="—" />
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

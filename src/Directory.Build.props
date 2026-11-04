@@ -4,6 +4,13 @@
   <!-- Every project under src/ is a NuGet package. -->
   <PropertyGroup>
     <IsPackable>true</IsPackable>
+    <!-- dotnet pack fails on breaking changes of the public API compared to the last published version. -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+  </PropertyGroup>
+
+  <!-- Baseline: last version published on nuget.org (packages created later have no baseline yet). -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'Cartovia.WinUI' and '$(MSBuildProjectName)' != 'Cartovia.Maui'">
+    <PackageValidationBaselineVersion>1.1.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <ItemGroup>

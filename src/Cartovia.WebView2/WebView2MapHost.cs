@@ -32,13 +32,14 @@ public sealed class MapHostErrorEventArgs : EventArgs
 /// <c>https://cartovia.local/</c>, relays web messages, keeps navigation inside the map page, handles permissions,
 /// and offers screenshots / PDF export. Can be created before the WebView exists and attached later.
 /// </summary>
-public sealed class WebView2MapHost : IMapHost, IDisposable
+public sealed class WebView2MapHost : IMapHost, IMapDataHost, IDisposable
 {
     private readonly TaskCompletionSource<CoreWebView2> _attached = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private SynchronizationContext? _uiContext;
     private int _uiThreadId;
     private CoreWebView2? _core;
     private bool _disposed;
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, (Func<Stream> Open, string ContentType)> _data = new(StringComparer.Ordinal);
 
     /// <summary>Creates a host (call <see cref="Attach"/> once the WebView is initialized).</summary>
     public WebView2MapHost(WebView2HostOptions? options = null) => Options = options ?? new WebView2HostOptions();
@@ -95,6 +96,17 @@ public sealed class WebView2MapHost : IMapHost, IDisposable
         core.Navigate(MapWebAssets.PageUrl);
         _attached.TrySetResult(core);
     }
+
+    /// <inheritdoc />
+    public string PublishData(string name, Func<Stream> open, string contentType)
+    {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("A name is required.", nameof(name));
+        _data[name.TrimStart('/')] = (open ?? throw new ArgumentNullException(nameof(open)), contentType);
+        return "https://" + MapWebAssets.HostName + "/data/" + name.TrimStart('/');
+    }
+
+    /// <inheritdoc />
+    public void UnpublishData(string name) => _data.TryRemove(name.TrimStart('/'), out _);
 
     /// <summary>Reloads the map page (the map is recreated with its options).</summary>
     public void Reload() => _core?.Navigate(MapWebAssets.PageUrl);
@@ -171,12 +183,40 @@ public sealed class WebView2MapHost : IMapHost, IDisposable
     {
         var uri = new Uri(e.Request.Uri);
         if (!string.Equals(uri.Host, MapWebAssets.HostName, StringComparison.OrdinalIgnoreCase)) return;
-        var stream = MapWebAssets.Open(uri.AbsolutePath);
         var env = _core!.Environment;
+        if (uri.AbsolutePath.StartsWith("/data/", StringComparison.Ordinal))
+        {
+            var key = Uri.UnescapeDataString(uri.AbsolutePath.Substring(6));
+            if (!_data.TryGetValue(key, out var entry) && !_data.TryGetValue(uri.AbsolutePath.Substring(6), out entry))
+            {
+                e.Response = env.CreateWebResourceResponse(null, 404, "Not Found", "Content-Type: text/plain");
+                return;
+            }
+            e.Response = CreateDataResponse(env, entry.Open(), entry.ContentType,
+                e.Request.Headers.Contains("Range") ? e.Request.Headers.GetHeader("Range") : null);
+            return;
+        }
+        var stream = MapWebAssets.Open(uri.AbsolutePath);
         e.Response = stream is null
             ? env.CreateWebResourceResponse(null, 404, "Not Found", "Content-Type: text/plain")
             : env.CreateWebResourceResponse(stream, 200, "OK",
                 $"Content-Type: {MapWebAssets.GetContentType(uri.AbsolutePath)}\r\nCache-Control: no-cache\r\nAccess-Control-Allow-Origin: *");
+    }
+
+    /// <summary>Full (200) or partial (206, HTTP Range) response for published data — PMTiles reads archives by ranges.</summary>
+    private static CoreWebView2WebResourceResponse CreateDataResponse(CoreWebView2Environment env, Stream stream, string contentType, string? range)
+    {
+        const string common = "Cache-Control: no-cache\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Expose-Headers: Content-Range, Content-Length\r\nAccept-Ranges: bytes";
+        if (!DataRange.TryParse(range, stream, out long start, out long end, out long total))
+            return env.CreateWebResourceResponse(stream, 200, "OK", $"Content-Type: {contentType}\r\n{common}");
+        if (start < 0)
+        {
+            stream.Dispose();
+            return env.CreateWebResourceResponse(null, 416, "Range Not Satisfiable", $"Content-Range: bytes */{total}\r\n{common}");
+        }
+        var bytes = DataRange.Read(stream, start, end);
+        return env.CreateWebResourceResponse(new MemoryStream(bytes), 206, "Partial Content",
+            $"Content-Type: {contentType}\r\nContent-Range: bytes {start}-{start + bytes.Length - 1}/{total}\r\nContent-Length: {bytes.Length}\r\n{common}");
     }
 
     private void OnNavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)

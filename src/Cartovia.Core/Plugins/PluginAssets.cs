@@ -11,6 +11,8 @@ public static class PluginAssets
     public const string MapLibreGeocoderVersion = "1.9.4";
     /// <summary>mapbox-gl-directions version.</summary>
     public const string DirectionsVersion = "4.3.3";
+    /// <summary>PMTiles version.</summary>
+    public const string PmTilesVersion = "4.5.0";
     /// <summary>Turf.js version.</summary>
     public const string TurfVersion = "7.4.0";
 
@@ -30,6 +32,8 @@ public static class PluginAssets
     public static string DirectionsScript { get; set; } = $"https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v{DirectionsVersion}/mapbox-gl-directions.js";
     /// <summary>mapbox-gl-directions stylesheet.</summary>
     public static string DirectionsStylesheet { get; set; } = $"https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v{DirectionsVersion}/mapbox-gl-directions.css";
+    /// <summary>PMTiles script.</summary>
+    public static string PmTilesScript { get; set; } = $"https://unpkg.com/pmtiles@{PmTilesVersion}/dist/pmtiles.js";
     /// <summary>Turf.js script.</summary>
     public static string TurfScript { get; set; } = $"https://unpkg.com/@turf/turf@{TurfVersion}/turf.min.js";
 }

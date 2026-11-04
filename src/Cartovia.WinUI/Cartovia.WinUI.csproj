@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CartoviaWinUITargets)</TargetFrameworks>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <UseWinUI>true</UseWinUI>
+    <AssemblyName>Cartovia.WinUI</AssemblyName>
+    <RootNamespace>Cartovia.WinUI</RootNamespace>
+    <PackageId>Cartovia.WinUI</PackageId>
+    <Description>Cartovia WinUI 3 map control: vector maps with MapLibre GL JS (no account needed) or Mapbox GL JS, hosted in the WinUI WebView2: every layer type and style property, expressions, markers, popups, controls, plugins, events and a bindable two-way camera.</Description>
+    <PackageTags>$(PackageTags);winui;winui3;windows-app-sdk</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Lowest version used by .NET MAUI 10, so MAUI and newer WinUI apps can both use the package. -->
+    <PackageReference Include="Microsoft.WindowsAppSDK" VersionOverride="1.8.260529003" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" VersionOverride="10.0.26100.8249" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cartovia.Core\Cartovia.Core.csproj" />
+  </ItemGroup>
+
+</Project>
