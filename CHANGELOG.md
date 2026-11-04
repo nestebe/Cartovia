@@ -5,7 +5,9 @@ All notable changes to Cartovia are documented here. The format follows
 `dotnet pack` validates the public API against the last published version (package validation), so breaking changes
 cannot ship in a minor version by accident.
 
-## [Unreleased] — 1.2.0
+## [Unreleased]
+
+## [1.2.0] — 2026-11-04
 
 ### Added
 - **Cartovia.WinUI**: WinUI 3 (Windows App SDK) map control.
@@ -46,6 +48,7 @@ First release.
 - **Cartovia.Mapbox.Services**: Mapbox REST clients (Geocoding, Search Box, Directions, Matrix, Isochrone,
   Optimization, Map Matching, Static Images, Tilequery).
 
-[Unreleased]: https://github.com/nestebe/Cartovia/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/nestebe/Cartovia/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/nestebe/Cartovia/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/nestebe/Cartovia/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/nestebe/Cartovia/releases/tag/v1.0.0
