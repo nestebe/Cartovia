@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(MapboxNetLibraryTargets)</TargetFrameworks>
+    <AssemblyName>Mapbox.Net.Services</AssemblyName>
+    <RootNamespace>Mapbox.Net.Services</RootNamespace>
+    <PackageId>Mapbox.Net.Services</PackageId>
+    <Description>Strongly-typed .NET client for the Mapbox web services: Geocoding v6, Search Box, Directions, Matrix, Isochrone, Optimization, Map Matching, Tilequery and Static Images. Results are exposed as Mapbox.Net GeoJSON types so they can be put on the map directly. HttpClient + System.Text.Json only.</Description>
+    <PackageTags>$(PackageTags);geocoding;directions;routing;isochrone;static-maps;tilequery;rest</PackageTags>
+  </PropertyGroup>
+
+  <!-- .NET 6 ships System.Text.Json 6; use the 8.x package for a consistent API surface. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mapbox.Net.Core\Mapbox.Net.Core.csproj" />
+  </ItemGroup>
+
+</Project>

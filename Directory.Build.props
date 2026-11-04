@@ -1,0 +1,51 @@
+<Project>
+
+  <!-- ===== Shared build settings ===== -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Deterministic>true</Deterministic>
+    <!-- .NET 6 is out of support but is an explicit target of this library. -->
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <NoWarn>$(NoWarn);NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <!-- Target frameworks used by the libraries. -->
+  <PropertyGroup>
+    <MapboxNetLibraryTargets>net6.0;net8.0;net10.0</MapboxNetLibraryTargets>
+    <MapboxNetWindowsTargets>net6.0-windows;net8.0-windows;net10.0-windows</MapboxNetWindowsTargets>
+  </PropertyGroup>
+
+  <!-- ===== NuGet package metadata (applies to every packable project) ===== -->
+  <PropertyGroup>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Authors>Nicolas Estebe</Authors>
+    <Company>Nicolas Estebe</Company>
+    <Copyright>Copyright © Nicolas Estebe $([System.DateTime]::Now.Year)</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!-- TODO: set the final repository URL before publishing. -->
+    <RepositoryUrl>https://github.com/nestebe/Mapbox.Net</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/nestebe/Mapbox.Net</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>mapbox;maplibre;map;maps;gis;webview2;wpf;winforms;desktop;geojson</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
+    <!-- Symbols + SourceLink (SourceLink is built into the .NET 8+ SDK). -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true' or '$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+</Project>

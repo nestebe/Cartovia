@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(MapboxNetWindowsTargets)</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>Mapbox.Net.Wpf</AssemblyName>
+    <RootNamespace>Mapbox.Net.Wpf</RootNamespace>
+    <PackageId>Mapbox.Net.Wpf</PackageId>
+    <Description>WPF map control for Mapbox GL JS and MapLibre GL JS (WebView2): every layer type and style property, expressions, markers, popups, controls, plugins (draw, geocoder, directions, turf), events and MVVM-friendly bindable camera.</Description>
+    <PackageTags>$(PackageTags);wpf;xaml;mvvm</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mapbox.Net.WebView2\Mapbox.Net.WebView2.csproj" />
+  </ItemGroup>
+
+</Project>

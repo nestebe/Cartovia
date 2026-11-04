@@ -1,0 +1,69 @@
+<Window x:Class="Mapbox.Net.Samples.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mbx="clr-namespace:Mapbox.Net.Wpf;assembly=Mapbox.Net.Wpf"
+        Title="Mapbox.Net — WPF sample" Height="820" Width="1320" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="150" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto" Background="#F9FAFB">
+            <StackPanel Margin="12">
+                <TextBlock x:Name="EngineText" Style="{StaticResource Header}" Margin="0,0,0,6" TextWrapping="Wrap" />
+                <ComboBox x:Name="StyleCombo" Margin="0,0,0,6" SelectionChanged="OnStyleChanged" />
+
+                <TextBlock Style="{StaticResource Header}" Text="Camera" />
+                <Button Content="Fly to Paris" Click="OnFlyParis" />
+                <Button Content="Fly to New York (3D)" Click="OnFlyNewYork" />
+                <Button Content="Reset north" Click="OnResetNorth" />
+
+                <TextBlock Style="{StaticResource Header}" Text="Data &amp; layers" />
+                <Button Content="Cities (circles + labels)" Click="OnAddCities" />
+                <Button Content="Clustered points" Click="OnAddClusters" />
+                <Button Content="Heatmap" Click="OnAddHeatmap" />
+                <Button Content="3D buildings" Click="OnAdd3DBuildings" />
+                <Button Content="Terrain (Mapbox)" Click="OnTerrain" />
+                <Button Content="Remove data" Click="OnClear" />
+
+                <TextBlock Style="{StaticResource Header}" Text="Annotations" />
+                <Button Content="Draggable marker" Click="OnAddMarker" />
+                <Button Content="Custom HTML control" Click="OnAddHtmlControl" />
+
+                <TextBlock Style="{StaticResource Header}" Text="Plugins" />
+                <Button Content="Draw tools" Click="OnDraw" />
+                <Button Content="Search box (geocoder)" Click="OnGeocoder" />
+                <Button Content="Turf: 2 km buffer" Click="OnTurf" />
+
+                <TextBlock Style="{StaticResource Header}" Text="Export" />
+                <Button Content="Screenshot (PNG)" Click="OnScreenshot" />
+                <Button Content="Print to PDF" Click="OnPdf" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <mbx:MapView x:Name="MapView" Grid.Column="1" Grid.Row="0"
+                     Center="2.3522, 48.8566" Zoom="11" />
+
+        <ListBox x:Name="EventLog" Grid.Column="1" Grid.Row="1" FontFamily="Consolas" FontSize="11" BorderThickness="0,1,0,0" />
+
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2">
+            <StatusBarItem>
+                <TextBlock>
+                    <Run Text="Center: " /><Run Text="{Binding Center, ElementName=MapView, Mode=OneWay}" />
+                    <Run Text="   Zoom: " /><Run Text="{Binding Zoom, ElementName=MapView, Mode=OneWay, StringFormat=0.00}" />
+                    <Run Text="   Bearing: " /><Run Text="{Binding Bearing, ElementName=MapView, Mode=OneWay, StringFormat=0.0}" />
+                    <Run Text="   Pitch: " /><Run Text="{Binding Pitch, ElementName=MapView, Mode=OneWay, StringFormat=0.0}" />
+                </TextBlock>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock x:Name="PointerText" FontFamily="Consolas" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

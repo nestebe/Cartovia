@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    The Microsoft.Web.WebView2 package always references Microsoft.Web.WebView2.Wpf.dll. In projects that do not
+    use WPF (Windows Forms apps, libraries) it conflicts with WindowsBase (warning MSB3277). Drop that reference.
+    Set MapboxNetKeepWebView2Wpf=true to opt out.
+  -->
+  <Target Name="MapboxNetRemoveWebView2Wpf" BeforeTargets="ResolveAssemblyReferences"
+          Condition="'$(UseWPF)' != 'true' and '$(MapboxNetKeepWebView2Wpf)' != 'true'">
+    <ItemGroup>
+      <Reference Remove="@(Reference)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Wpf'" />
+    </ItemGroup>
+  </Target>
+</Project>
