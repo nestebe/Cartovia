@@ -161,8 +161,9 @@ python tools/generate_style_spec.py --mapbox-version 14.34.2 --maplibre-version 
 - Version : `VersionPrefix` dans `Directory.Build.props` (ou `-p:Version=x.y.z`).
 - Local : `dotnet pack Cartovia.sln -c Release -o artifacts`.
 - CI : `.github/workflows/ci.yml` compile et teste à chaque push. Un tag `v1.2.3` crée les packages (symboles `.snupkg`,
-  SourceLink), les publie sur les **GitHub Packages** (sans secret), sur **nuget.org** si le secret `NUGET_API_KEY` est
-  défini, et crée une release GitHub avec les packages en pièces jointes.
+  SourceLink), les publie sur les **GitHub Packages** (sans secret), sur **nuget.org** via
+  [Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (aucune clé API longue durée) si le
+  secret `NUGET_USER` est défini, et crée une release GitHub avec les packages en pièces jointes.
 
 ## Licence
 
