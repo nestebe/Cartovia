@@ -23,6 +23,23 @@ Cartovia embarque un moteur de rendu de cartes vectorielles WebGL dans une WebVi
 Par défaut, il fonctionne **sans aucun compte ni clé** grâce à MapLibre GL JS et aux fonds de carte gratuits
 d'OpenFreeMap ; Mapbox GL JS est disponible en option, avec la même API.
 
+## Documentation
+
+Les guides détaillés avec exemples, en anglais, sont dans [**docs/**](docs/README.md) :
+[démarrage](docs/getting-started.md) ·
+[WPF](docs/wpf.md) · [WinForms](docs/winforms.md) ·
+[carte et caméra](docs/map-and-camera.md) ·
+[sources et couches](docs/sources-and-layers.md) ·
+[expressions](docs/expressions.md) ·
+[événements](docs/events.md) ·
+[marqueurs, popups et contrôles](docs/annotations-and-controls.md) ·
+[requêtes et feature state](docs/queries-and-feature-state.md) ·
+[plugins](docs/plugins.md) ·
+[extensions](docs/extensions.md) ·
+[GeoJSON](docs/geojson.md) ·
+[services Mapbox](docs/mapbox-services.md) ·
+[sujets avancés](docs/advanced.md)
+
 ## Packages
 
 | Package | Rôle |
@@ -143,8 +160,9 @@ python tools/generate_style_spec.py --mapbox-version 14.34.2 --maplibre-version 
 
 - Version : `VersionPrefix` dans `Directory.Build.props` (ou `-p:Version=x.y.z`).
 - Local : `dotnet pack Cartovia.sln -c Release -o artifacts`.
-- CI : `.github/workflows/ci.yml` compile et teste à chaque push ; un tag `v1.2.3` crée les packages (symboles `.snupkg`,
-  SourceLink) et les publie sur nuget.org via le secret `NUGET_API_KEY`.
+- CI : `.github/workflows/ci.yml` compile et teste à chaque push. Un tag `v1.2.3` crée les packages (symboles `.snupkg`,
+  SourceLink), les publie sur les **GitHub Packages** (sans secret), sur **nuget.org** si le secret `NUGET_API_KEY` est
+  défini, et crée une release GitHub avec les packages en pièces jointes.
 
 ## Licence
 

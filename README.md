@@ -23,6 +23,23 @@ styles, expressions, markers, popups, controls, plugins and events raised in .NE
 Out of the box it works **without any account or key**, using MapLibre GL JS and the free OpenFreeMap basemaps;
 Mapbox GL JS is available as an option, with the same API.
 
+## Documentation
+
+Guides with examples for every feature live in [**docs/**](docs/README.md):
+[Getting started](docs/getting-started.md) ·
+[WPF](docs/wpf.md) · [WinForms](docs/winforms.md) ·
+[Map & camera](docs/map-and-camera.md) ·
+[Sources & layers](docs/sources-and-layers.md) ·
+[Expressions](docs/expressions.md) ·
+[Events](docs/events.md) ·
+[Markers, popups & controls](docs/annotations-and-controls.md) ·
+[Queries & feature state](docs/queries-and-feature-state.md) ·
+[Plugins](docs/plugins.md) ·
+[Extensions](docs/extensions.md) ·
+[GeoJSON](docs/geojson.md) ·
+[Mapbox services](docs/mapbox-services.md) ·
+[Advanced topics](docs/advanced.md)
+
 ## Packages
 
 | Package | Purpose |
@@ -143,8 +160,15 @@ python tools/generate_style_spec.py --mapbox-version 14.34.2 --maplibre-version 
 
 - Version: `VersionPrefix` in `Directory.Build.props` (or `-p:Version=x.y.z`).
 - Locally: `dotnet pack Cartovia.sln -c Release -o artifacts`.
-- CI: `.github/workflows/ci.yml` builds and tests on every push; a `v1.2.3` tag packs the libraries (`.snupkg` symbols,
-  SourceLink) and publishes them to nuget.org using the `NUGET_API_KEY` secret.
+- CI: `.github/workflows/ci.yml` builds and tests on every push. A `v1.2.3` tag packs the libraries (`.snupkg` symbols,
+  SourceLink), publishes them to **GitHub Packages** (no secret needed), to **nuget.org** when the `NUGET_API_KEY`
+  secret is set, and creates a GitHub release with the packages attached.
+
+Installing from GitHub Packages requires a personal access token with the `read:packages` scope:
+
+```bash
+dotnet nuget add source https://nuget.pkg.github.com/nestebe/index.json --name cartovia-github --username YOUR_GITHUB_USER --password YOUR_TOKEN
+```
 
 ## License
 
