@@ -40,11 +40,9 @@ jobs:
           else { $v = "1.0.0-ci.$env:GITHUB_RUN_NUMBER" }
           "version=$v" >> $env:GITHUB_OUTPUT
 
-      - name: Restore
-        run: dotnet restore Cartovia.sln
-
+      # Build restores each project with its own properties (the MAUI sample needs its win-x64 runtime pack).
       - name: Build
-        run: dotnet build Cartovia.sln -c Release --no-restore -p:Version=${{ steps.version.outputs.version }}
+        run: dotnet build Cartovia.sln -c Release -p:Version=${{ steps.version.outputs.version }}
 
       - name: Test
         run: dotnet test Cartovia.sln -c Release --no-build --logger trx --results-directory TestResults
