@@ -63,8 +63,6 @@ jobs:
       contents: write   # GitHub release
       packages: write   # GitHub Packages
       id-token: write   # nuget.org Trusted Publishing (OIDC)
-    env:
-      NUGET_USER: ${{ secrets.NUGET_USER }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -82,18 +80,15 @@ jobs:
             --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
             --api-key "${{ secrets.GITHUB_TOKEN }}" --no-symbols --skip-duplicate
 
-      # nuget.org Trusted Publishing: exchanges the GitHub OIDC token for a 1-hour API key.
-      # Requires a trusted publishing policy on nuget.org (owner nestebe, repository Cartovia,
-      # workflow ci.yml, environment nuget) and the NUGET_USER secret (nuget.org profile name).
+      # nuget.org Trusted Publishing: exchanges the GitHub OIDC token for a 1-hour API key (no stored secret).
+      # Policy on nuget.org: owner nestebe, repository Cartovia, workflow ci.yml, environment nuget.
       - name: NuGet login (OIDC)
         id: nuget-login
-        if: env.NUGET_USER != ''
         uses: NuGet/login@v1
         with:
-          user: ${{ secrets.NUGET_USER }}
+          user: nestebe   # nuget.org profile name
 
       - name: Push to nuget.org
-        if: env.NUGET_USER != ''
         run: |
           dotnet nuget push "artifacts/*.nupkg" \
             --source https://api.nuget.org/v3/index.json \
