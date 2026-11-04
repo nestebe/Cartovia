@@ -36,9 +36,15 @@ jobs:
         id: version
         shell: pwsh
         run: |
+          # Tags: the tag is the version. Other builds: VersionPrefix from Directory.Build.props + "-ci.N"
+          # (never lower than the last release, which package validation would reject).
           if ($env:GITHUB_REF -like 'refs/tags/v*') { $v = $env:GITHUB_REF_NAME.Substring(1) }
-          else { $v = "1.0.0-ci.$env:GITHUB_RUN_NUMBER" }
+          else {
+            $prefix = ([xml](Get-Content Directory.Build.props)).Project.PropertyGroup.VersionPrefix | Where-Object { $_ } | Select-Object -First 1
+            $v = "$prefix-ci.$env:GITHUB_RUN_NUMBER"
+          }
           "version=$v" >> $env:GITHUB_OUTPUT
+          Write-Host "Version: $v"
 
       # Build restores each project with its own properties (the MAUI sample needs its win-x64 runtime pack).
       - name: Build
