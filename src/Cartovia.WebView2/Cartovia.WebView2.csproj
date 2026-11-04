@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CartoviaWindowsTargets)</TargetFrameworks>
+    <AssemblyName>Cartovia.WebView2</AssemblyName>
+    <RootNamespace>Cartovia.WebView2</RootNamespace>
+    <PackageId>Cartovia.WebView2</PackageId>
+    <Description>Microsoft Edge WebView2 host of Cartovia: serves the map page, bridges messages, handles navigation, permissions, screenshots and PDF export. Shared by Cartovia.Wpf and Cartovia.WinForms.</Description>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cartovia.Core\Cartovia.Core.csproj" />
+  </ItemGroup>
+
+</Project>

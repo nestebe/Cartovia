@@ -38,16 +38,16 @@ jobs:
           "version=$v" >> $env:GITHUB_OUTPUT
 
       - name: Restore
-        run: dotnet restore Mapbox.Net.sln
+        run: dotnet restore Cartovia.sln
 
       - name: Build
-        run: dotnet build Mapbox.Net.sln -c Release --no-restore -p:Version=${{ steps.version.outputs.version }}
+        run: dotnet build Cartovia.sln -c Release --no-restore -p:Version=${{ steps.version.outputs.version }}
 
       - name: Test
-        run: dotnet test Mapbox.Net.sln -c Release --no-build --logger trx --results-directory TestResults
+        run: dotnet test Cartovia.sln -c Release --no-build --logger trx --results-directory TestResults
 
       - name: Pack
-        run: dotnet pack Mapbox.Net.sln -c Release --no-build -o artifacts -p:Version=${{ steps.version.outputs.version }}
+        run: dotnet pack Cartovia.sln -c Release --no-build -o artifacts -p:Version=${{ steps.version.outputs.version }}
 
       - uses: actions/upload-artifact@v4
         with:

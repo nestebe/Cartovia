@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Downloads the map engines and plugins used by Mapbox.Net into a local folder, for use without CDN
+    Downloads the map engines and plugins used by Cartovia into a local folder, for use without CDN
     (WebView2HostOptions.LocalAssetsFolder + MapOptions.EngineScriptUrl / plugin ScriptUrl properties).
 .NOTES
     Mapbox GL JS and the Mapbox plugins are subject to the Mapbox Terms of Service.
@@ -48,4 +48,4 @@ foreach ($name in $files.Keys) {
 
 Write-Host ""
 Write-Host "Done. Serve the folder with WebView2HostOptions.LocalAssetsFolder and use URLs such as"
-Write-Host "  https://assets.mapbox-net.local/maplibre-gl.js"
+Write-Host "  https://assets.cartovia.local/maplibre-gl.js"

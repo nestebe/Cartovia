@@ -1,4 +1,4 @@
 <Project>
-  <!-- Same fix the Mapbox.Net.WinForms package applies to consumer apps through buildTransitive. -->
-  <Import Project="$(MSBuildThisFileDirectory)..\build\Mapbox.Net.RemoveWebView2Wpf.targets" />
+  <!-- Same fix the Cartovia.WinForms package applies to consumer apps through buildTransitive. -->
+  <Import Project="$(MSBuildThisFileDirectory)..\build\Cartovia.RemoveWebView2Wpf.targets" />
 </Project>

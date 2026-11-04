@@ -15,8 +15,8 @@
 
   <!-- Target frameworks used by the libraries. -->
   <PropertyGroup>
-    <MapboxNetLibraryTargets>net6.0;net8.0;net10.0</MapboxNetLibraryTargets>
-    <MapboxNetWindowsTargets>net6.0-windows;net8.0-windows;net10.0-windows</MapboxNetWindowsTargets>
+    <CartoviaLibraryTargets>net6.0;net8.0;net10.0</CartoviaLibraryTargets>
+    <CartoviaWindowsTargets>net6.0-windows;net8.0-windows;net10.0-windows</CartoviaWindowsTargets>
   </PropertyGroup>
 
   <!-- ===== NuGet package metadata (applies to every packable project) ===== -->
@@ -26,11 +26,10 @@
     <Company>Nicolas Estebe</Company>
     <Copyright>Copyright © Nicolas Estebe $([System.DateTime]::Now.Year)</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <!-- TODO: set the final repository URL before publishing. -->
-    <RepositoryUrl>https://github.com/nestebe/Mapbox.Net</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/nestebe/Mapbox.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nestebe/Cartovia</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/nestebe/Cartovia</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>mapbox;maplibre;map;maps;gis;webview2;wpf;winforms;desktop;geojson</PackageTags>
+    <PackageTags>maps;map;maplibre;mapbox;gis;cartography;vector-tiles;webview2;wpf;winforms;desktop;geojson</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
