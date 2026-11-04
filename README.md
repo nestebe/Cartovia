@@ -6,6 +6,12 @@
 
 MapLibre GL JS (open source, sans compte) ou Mapbox GL JS · WebView2 · .NET 6 / 8 / 10
 
+[![CI](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml/badge.svg)](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-6366F1.svg)](LICENSE)
+![.NET](https://img.shields.io/badge/.NET-6%20%7C%208%20%7C%2010-512BD4)
+![Platforms](https://img.shields.io/badge/UI-WPF%20%7C%20WinForms-0EA5E9)
+![Engines](https://img.shields.io/badge/engines-MapLibre%20%7C%20Mapbox-22C55E)
+
 ![Cartovia WPF showcase](docs/screenshot.png)
 
 </div>
