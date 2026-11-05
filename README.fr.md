@@ -7,6 +7,7 @@
 MapLibre GL JS (open source, sans compte) ou Mapbox GL JS · WebView2 · .NET 6 / 8 / 10
 
 [![CI](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml/badge.svg)](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/Cartovia.Core.svg?label=NuGet&color=004880)](https://www.nuget.org/packages/Cartovia.Core)
 [![License: MIT](https://img.shields.io/badge/license-MIT-6366F1.svg)](LICENSE)
 ![.NET](https://img.shields.io/badge/.NET-6%20%7C%208%20%7C%2010-512BD4)
 ![Platforms](https://img.shields.io/badge/UI-WPF%20%7C%20WinForms%20%7C%20Avalonia%20%7C%20WinUI%203%20%7C%20MAUI-0EA5E9)
@@ -54,6 +55,24 @@ Les guides détaillés avec exemples, en anglais, sont dans [**docs/**](docs/REA
 | `Cartovia.Core` | API typée indépendante de l'UI : caméra, sources, **toutes les couches et propriétés de style**, expressions, annotations, plugins, événements, GeoJSON |
 | `Cartovia.WebView2` | Hôte WebView2 partagé (page embarquée, messages, navigation, permissions, capture PNG, export PDF) |
 | `Cartovia.Mapbox.Services` | Extension Mapbox optionnelle : clients REST Geocoding, Search Box, Directions, Matrix, Isochrone, Optimization, Map Matching, Static Images, Tilequery |
+
+## Installation
+
+Tous les packages sont publiés sur [nuget.org](https://www.nuget.org/packages?q=Cartovia) : installez celui de votre
+framework d'interface, il apporte `Cartovia.Core` et `Cartovia.WebView2` avec lui.
+
+| Framework | Package | Commande | Cibles |
+|---|---|---|---|
+| WPF | [![Cartovia.Wpf](https://img.shields.io/nuget/v/Cartovia.Wpf.svg?label=Cartovia.Wpf)](https://www.nuget.org/packages/Cartovia.Wpf) | `dotnet add package Cartovia.Wpf` | .NET 6 / 8 / 10 |
+| Windows Forms | [![Cartovia.WinForms](https://img.shields.io/nuget/v/Cartovia.WinForms.svg?label=Cartovia.WinForms)](https://www.nuget.org/packages/Cartovia.WinForms) | `dotnet add package Cartovia.WinForms` | .NET 6 / 8 / 10 |
+| Avalonia 12 | [![Cartovia.Avalonia](https://img.shields.io/nuget/v/Cartovia.Avalonia.svg?label=Cartovia.Avalonia)](https://www.nuget.org/packages/Cartovia.Avalonia) | `dotnet add package Cartovia.Avalonia` | .NET 8 / 10 |
+| WinUI 3 | [![Cartovia.WinUI](https://img.shields.io/nuget/v/Cartovia.WinUI.svg?label=Cartovia.WinUI)](https://www.nuget.org/packages/Cartovia.WinUI) | `dotnet add package Cartovia.WinUI` | .NET 8 / 10 (Windows 10 2004+) |
+| MAUI (Windows) | [![Cartovia.Maui](https://img.shields.io/nuget/v/Cartovia.Maui.svg?label=Cartovia.Maui)](https://www.nuget.org/packages/Cartovia.Maui) | `dotnet add package Cartovia.Maui` | .NET 10 |
+
+Optionnel : `dotnet add package Cartovia.Mapbox.Services` pour les API REST Mapbox (géocodage, itinéraires, isochrones…).
+
+Prérequis : Windows 10 ou 11 avec le [runtime WebView2](https://developer.microsoft.com/microsoft-edge/webview2/)
+(préinstallé sur Windows 11 et sur les Windows 10 à jour). Aucun compte ni clé n'est nécessaire avec le moteur MapLibre par défaut.
 
 ## Démarrage rapide (WPF)
 
@@ -173,13 +192,7 @@ Régénérer les couches pour une nouvelle version des spécifications :
 python tools/generate_style_spec.py --mapbox-version 14.34.2 --maplibre-version 26.5.1
 ```
 
-## Publication NuGet
-
-- Version : `VersionPrefix` dans `Directory.Build.props` (ou `-p:Version=x.y.z`).
-- Local : `dotnet pack Cartovia.sln -c Release -o artifacts`.
-- CI : `.github/workflows/ci.yml` compile et teste à chaque push. Un tag `v1.2.3` crée les packages (symboles `.snupkg`,
-  SourceLink), les publie sur les **GitHub Packages** (sans secret), sur **nuget.org** via
-  [Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (aucun secret stocké), et crée une release GitHub avec les packages en pièces jointes.
+La publication d'une nouvelle version (tag, publication sur nuget.org) est décrite dans [CONTRIBUTING.md](CONTRIBUTING.md#releasing).
 
 ## Licence
 

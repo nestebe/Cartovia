@@ -7,6 +7,7 @@
 MapLibre GL JS (open source, no account needed) or Mapbox GL JS · WebView2 · .NET 6 / 8 / 10
 
 [![CI](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml/badge.svg)](https://github.com/nestebe/Cartovia/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/Cartovia.Core.svg?label=NuGet&color=004880)](https://www.nuget.org/packages/Cartovia.Core)
 [![License: MIT](https://img.shields.io/badge/license-MIT-6366F1.svg)](LICENSE)
 ![.NET](https://img.shields.io/badge/.NET-6%20%7C%208%20%7C%2010-512BD4)
 ![Platforms](https://img.shields.io/badge/UI-WPF%20%7C%20WinForms%20%7C%20Avalonia%20%7C%20WinUI%203%20%7C%20MAUI-0EA5E9)
@@ -54,6 +55,24 @@ Guides with examples for every feature live in [**docs/**](docs/README.md):
 | `Cartovia.Core` | UI-agnostic typed API: camera, sources, **every style layer and property**, expressions, annotations, plugins, events, GeoJSON |
 | `Cartovia.WebView2` | Shared WebView2 host (embedded page, messaging, navigation, permissions, PNG capture, PDF export) |
 | `Cartovia.Mapbox.Services` | Optional Mapbox extension: REST clients for Geocoding, Search Box, Directions, Matrix, Isochrone, Optimization, Map Matching, Static Images, Tilequery |
+
+## Installation
+
+All packages are published on [nuget.org](https://www.nuget.org/packages?q=Cartovia): install the one matching your UI
+framework, it brings `Cartovia.Core` and `Cartovia.WebView2` with it.
+
+| UI framework | Package | Command | Targets |
+|---|---|---|---|
+| WPF | [![Cartovia.Wpf](https://img.shields.io/nuget/v/Cartovia.Wpf.svg?label=Cartovia.Wpf)](https://www.nuget.org/packages/Cartovia.Wpf) | `dotnet add package Cartovia.Wpf` | .NET 6 / 8 / 10 |
+| Windows Forms | [![Cartovia.WinForms](https://img.shields.io/nuget/v/Cartovia.WinForms.svg?label=Cartovia.WinForms)](https://www.nuget.org/packages/Cartovia.WinForms) | `dotnet add package Cartovia.WinForms` | .NET 6 / 8 / 10 |
+| Avalonia 12 | [![Cartovia.Avalonia](https://img.shields.io/nuget/v/Cartovia.Avalonia.svg?label=Cartovia.Avalonia)](https://www.nuget.org/packages/Cartovia.Avalonia) | `dotnet add package Cartovia.Avalonia` | .NET 8 / 10 |
+| WinUI 3 | [![Cartovia.WinUI](https://img.shields.io/nuget/v/Cartovia.WinUI.svg?label=Cartovia.WinUI)](https://www.nuget.org/packages/Cartovia.WinUI) | `dotnet add package Cartovia.WinUI` | .NET 8 / 10 (Windows 10 2004+) |
+| MAUI (Windows) | [![Cartovia.Maui](https://img.shields.io/nuget/v/Cartovia.Maui.svg?label=Cartovia.Maui)](https://www.nuget.org/packages/Cartovia.Maui) | `dotnet add package Cartovia.Maui` | .NET 10 |
+
+Optional: `dotnet add package Cartovia.Mapbox.Services` for the Mapbox REST APIs (geocoding, directions, isochrones…).
+
+Requirements: Windows 10 or 11 with the [WebView2 runtime](https://developer.microsoft.com/microsoft-edge/webview2/)
+(preinstalled on Windows 11 and on up-to-date Windows 10). No account or API key is needed with the default MapLibre engine.
 
 ## Quick start (WPF)
 
@@ -171,19 +190,7 @@ Regenerate the layers for a new version of the style specifications:
 python tools/generate_style_spec.py --mapbox-version 14.34.2 --maplibre-version 26.5.1
 ```
 
-## Publishing to NuGet
-
-- Version: `VersionPrefix` in `Directory.Build.props` (or `-p:Version=x.y.z`).
-- Locally: `dotnet pack Cartovia.sln -c Release -o artifacts`.
-- CI: `.github/workflows/ci.yml` builds and tests on every push. A `v1.2.3` tag packs the libraries (`.snupkg` symbols,
-  SourceLink), publishes them to **GitHub Packages** (no secret needed), to **nuget.org** through
-  [Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (no stored secret), and creates a GitHub release with the packages attached.
-
-Installing from GitHub Packages requires a personal access token with the `read:packages` scope:
-
-```bash
-dotnet nuget add source https://nuget.pkg.github.com/nestebe/index.json --name cartovia-github --username YOUR_GITHUB_USER --password YOUR_TOKEN
-```
+Releasing a new version (tag, nuget.org publishing) is described in [CONTRIBUTING.md](CONTRIBUTING.md#releasing).
 
 ## License
 
