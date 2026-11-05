@@ -258,6 +258,162 @@ public partial class MainWindow : Window
         if (On(sender)) await Map.FlyToAsync(new CameraOptions { Center = new LngLat(10, 25), Zoom = 1.6, Pitch = 0, Bearing = 0 });
     });
 
+    // ---------------------------------------------------------------- cadastre (France, IGN Parcellaire Express)
+
+    // Official IGN vector tiles of the French land registry (Géoplateforme, open data, no key).
+    // Source layers: parcelle, feuille (cadastral sheets), commune, localisant (label points), batiment…
+    private const string CadastreTiles = "https://data.geopf.fr/tms/1.0.0/PCI/{z}/{x}/{y}.pbf";
+    private FeatureIdentifier? _selectedParcel;
+
+    private async void OnFlySaintEmilion(object sender, RoutedEventArgs e) => await Run(async () =>
+    {
+        if (CadastreToggle.IsChecked != true) { CadastreToggle.IsChecked = true; await SetCadastreAsync(); }
+        await Map.FlyToAsync(new CameraOptions { Center = new LngLat(-0.1554, 44.8935), Zoom = 17.2, Pitch = 0, Bearing = 0 });
+    });
+
+    private async void OnToggleCadastre(object sender, RoutedEventArgs e) => await Run(SetCadastreAsync);
+
+    private async Task SetCadastreAsync()
+    {
+        bool on = CadastreToggle.IsChecked == true;
+        ParcelPanel.Visibility = on ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+        if (!on)
+        {
+            Release("cadastre");
+            _selectedParcel = null;
+            ShowParcel(null);
+            await Map.RemoveSourceAndLayersAsync("cadastre");
+            return;
+        }
+        if (await Map.HasSourceAsync("cadastre")) return;
+
+        await Map.AddSourceAsync(new VectorSource("cadastre")
+        {
+            Tiles = new[] { CadastreTiles },
+            MinZoom = 5,
+            MaxZoom = 19,
+            // Parcels get their unique id (IDU, e.g. "33394000AB0123") as feature id: required by feature-state.
+            PromoteId = new Dictionary<string, string> { ["parcelle"] = "idu" },
+            Attribution = "© <a href=\"https://geoservices.ign.fr/\">IGN</a> – Parcellaire Express (PCI)",
+        });
+
+        // Parcels go below the labels of the base style so street names stay readable.
+        var beforeId = await Map.EvalAsync<string>(
+            "var l = map.getStyle().layers.find(function (l) { return l.type === 'symbol'; }); return l ? l.id : null;");
+        var hovered = Expr.Equal(Expr.Coalesce(Expr.FeatureState("hover"), false), true);
+        var selected = Expr.Equal(Expr.Coalesce(Expr.FeatureState("selected"), false), true);
+
+        await Map.AddLayerAsync(new FillLayer("cadastre-parcels-fill", "cadastre")
+        {
+            SourceLayer = "parcelle",
+            MinZoom = 15,
+            FillColor = Expr.Case("#6366F1", (selected, "#F97316")),
+            FillOpacity = Expr.Case(0.05, (selected, 0.45), (hovered, 0.32)),
+        }, beforeId);
+        await Map.AddLayerAsync(new LineLayer("cadastre-parcels-line", "cadastre")
+        {
+            SourceLayer = "parcelle",
+            MinZoom = 15,
+            LineColor = "#4F46E5",
+            LineOpacity = 0.75,
+            LineWidth = Expr.Interpolate(Interpolation.Linear, Expr.Zoom(), (15, 0.4), (19, 1.4)),
+        }, beforeId);
+        await Map.AddLayerAsync(new LineLayer("cadastre-sheets", "cadastre")
+        {
+            SourceLayer = "feuille",
+            MinZoom = 15,
+            LineColor = "#312E81",
+            LineWidth = 1.6,
+            LineDasharray = new[] { 3.0, 2.0 },
+        }, beforeId);
+        await Map.AddLayerAsync(new LineLayer("cadastre-communes", "cadastre")
+        {
+            SourceLayer = "commune",
+            LineColor = "#7C3AED",
+            LineWidth = Expr.Interpolate(Interpolation.Linear, Expr.Zoom(), (11, 1.2), (17, 3.5)),
+            LineOpacity = 0.8,
+        }, beforeId);
+        // Outline of the hovered / selected parcel, drawn above everything else.
+        await Map.AddLayerAsync(new LineLayer("cadastre-parcels-highlight", "cadastre")
+        {
+            SourceLayer = "parcelle",
+            MinZoom = 15,
+            LineColor = Expr.Case("#4338CA", (selected, "#EA580C")),
+            LineWidth = 3,
+            LineOpacity = Expr.Case(0.0, (selected, 1.0), (hovered, 1.0)),
+        });
+        await Map.AddLayerAsync(new SymbolLayer("cadastre-numbers", "cadastre")
+        {
+            SourceLayer = "localisant",
+            MinZoom = 17,
+            TextField = Expr.Get("numero"),
+            TextFont = await GetLabelFontAsync(),
+            TextSize = 11,
+            TextColor = "#312E81",
+            TextHaloColor = "#ffffff",
+            TextHaloWidth = 1.5,
+        });
+
+        // Hover effect (feature-state "hover", handled in the page: no round trip per mouse move).
+        Track("cadastre", await Map.EnableHoverCursorAsync("cadastre-parcels-fill"));
+        Track("cadastre", await Map.EnableHoverStateAsync("cadastre-parcels-fill", "cadastre", "parcelle"));
+        // The hovered parcel is also reported to C#, here to show it in the details card.
+        Track("cadastre", Map.OnLayer("cadastre-parcels-fill", LayerEvent.MouseMove, (_, a) =>
+        {
+            if (_selectedParcel is null && a.Features.Count > 0) ShowParcel(a.Features[0]);
+        }));
+        Track("cadastre", Map.OnLayer("cadastre-parcels-fill", LayerEvent.MouseLeave, (_, _) =>
+        {
+            if (_selectedParcel is null) ShowParcel(null);
+        }));
+        // Selection: handled in C# so the application keeps the selected parcel.
+        Track("cadastre", Map.OnLayer("cadastre-parcels-fill", LayerEvent.Click, async (_, a) => await Run(async () =>
+        {
+            if (a.Features.Count == 0) return;
+            var feature = a.Features[0];
+            var id = FeatureIdentifier.From(feature);
+            if (_selectedParcel is not null) await Map.RemoveFeatureStateAsync(_selectedParcel, "selected");
+            if (_selectedParcel == id) { _selectedParcel = null; ShowParcel(feature); return; }
+            _selectedParcel = id;
+            await Map.SetFeatureStateAsync(id, new { selected = true });
+            ShowParcel(feature);
+            Log($"parcel       {id.Id}  {feature.GetProperty<string>("nom_com")} {feature.GetProperty<string>("section")} {feature.GetProperty<string>("numero")}");
+        })));
+
+        var zoom = (await Map.GetCameraAsync()).Zoom;
+        if (zoom < 15) ParcelHint.Text = "Zoom in (level 15+) to see the parcels, or fly to Saint-Émilion.";
+    }
+
+    private async Task<string[]> GetLabelFontAsync()
+    {
+        // Fonts depend on the glyphs of the base style: reuse the font of one of its labels.
+        var font = await Map.EvalAsync<string[]>(
+            "var l = map.getStyle().layers.find(function (l) { return l.type === 'symbol' && l.layout && Array.isArray(l.layout['text-font']); });" +
+            "if (!l) return null; var f = l.layout['text-font']; if (f[0] === 'literal') f = f[1];" +
+            "return Array.isArray(f) && f.every(function (s) { return typeof s === 'string'; }) ? f : null;");
+        return font is { Length: > 0 } ? font : new[] { "Open Sans Regular", "Arial Unicode MS Regular" };
+    }
+
+    private void ShowParcel(QueriedFeature? feature)
+    {
+        if (feature is null)
+        {
+            ParcelDetails.Visibility = System.Windows.Visibility.Collapsed;
+            ParcelHint.Visibility = System.Windows.Visibility.Visible;
+            ParcelHint.Text = "Hover a parcel, click to select it.";
+            return;
+        }
+        ParcelHint.Visibility = _selectedParcel is null ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+        ParcelHint.Text = "Click to select this parcel.";
+        ParcelDetails.Visibility = System.Windows.Visibility.Visible;
+        ParcelCommune.Text = $"{feature.GetProperty<string>("nom_com")} ({feature.GetProperty<string>("code_insee")})";
+        ParcelSection.Text = feature.GetProperty<string>("section") ?? "—";
+        ParcelNumber.Text = feature.GetProperty<string>("numero") ?? "—";
+        var area = feature.GetProperty<double?>("contenance");
+        ParcelArea.Text = area is { } m2 ? $"{m2:N0} m²" : "—";
+        ParcelId.Text = feature.GetProperty<string>("idu") ?? "—";
+    }
+
     // ---------------------------------------------------------------- tools
 
     private async void OnToggleDraw(object sender, RoutedEventArgs e) => await Run(async () =>

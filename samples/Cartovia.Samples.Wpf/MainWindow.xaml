@@ -52,6 +52,7 @@
                             <Button Content="New York" Tag="&#xE709;" Style="{StaticResource PillButton}" Click="OnFlyNewYork" />
                             <Button Content="Mont Blanc" Tag="&#xE709;" Style="{StaticResource PillButton}" Click="OnFlyMontBlanc" />
                             <Button Content="Tokyo" Tag="&#xE709;" Style="{StaticResource PillButton}" Click="OnFlyTokyo" />
+                            <Button Content="Saint-Émilion" Tag="&#xE709;" Style="{StaticResource PillButton}" Click="OnFlySaintEmilion" />
                             <Button Content="Reset view" Tag="&#xE7AD;" Style="{StaticResource PillButton}" Click="OnResetNorth" />
                         </WrapPanel>
 
@@ -64,8 +65,43 @@
                                 <ToggleButton x:Name="BuildingsToggle" Content="3D buildings" Tag="&#xE80F;" Style="{StaticResource LayerToggle}" Click="OnToggleBuildings" />
                                 <ToggleButton x:Name="TerrainToggle" Content="3D terrain" Tag="&#xE909;" Style="{StaticResource LayerToggle}" Click="OnToggleTerrain" />
                                 <ToggleButton x:Name="GlobeToggle" Content="Globe projection" Tag="&#xE774;" Style="{StaticResource LayerToggle}" Click="OnToggleGlobe" />
+                                <ToggleButton x:Name="CadastreToggle" Content="Cadastral parcels (France)" Tag="&#xE80A;" Style="{StaticResource LayerToggle}" Click="OnToggleCadastre" />
                             </StackPanel>
                         </Border>
+
+                        <!-- Parcel details, filled from the click event of the cadastre layer -->
+                        <StackPanel x:Name="ParcelPanel" Visibility="Collapsed">
+                            <TextBlock Text="CADASTRAL PARCEL" Style="{StaticResource SectionHeader}" />
+                            <Border Style="{StaticResource Card}" Padding="14,12">
+                                <StackPanel>
+                                    <TextBlock x:Name="ParcelHint" Text="Hover a parcel, click to select it." FontSize="12"
+                                               Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" />
+                                    <Grid x:Name="ParcelDetails" Visibility="Collapsed" TextElement.FontSize="12.5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="92" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Commune" Foreground="{StaticResource MutedBrush}" Margin="0,0,0,6" />
+                                        <TextBlock x:Name="ParcelCommune" Grid.Column="1" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,6" />
+                                        <TextBlock Grid.Row="1" Text="Section" Foreground="{StaticResource MutedBrush}" Margin="0,0,0,6" />
+                                        <TextBlock x:Name="ParcelSection" Grid.Row="1" Grid.Column="1" Margin="0,0,0,6" />
+                                        <TextBlock Grid.Row="2" Text="Number" Foreground="{StaticResource MutedBrush}" Margin="0,0,0,6" />
+                                        <TextBlock x:Name="ParcelNumber" Grid.Row="2" Grid.Column="1" Margin="0,0,0,6" />
+                                        <TextBlock Grid.Row="3" Text="Area" Foreground="{StaticResource MutedBrush}" Margin="0,0,0,6" />
+                                        <TextBlock x:Name="ParcelArea" Grid.Row="3" Grid.Column="1" Margin="0,0,0,6" />
+                                        <TextBlock Grid.Row="4" Text="Parcel id" Foreground="{StaticResource MutedBrush}" />
+                                        <TextBlock x:Name="ParcelId" Grid.Row="4" Grid.Column="1" FontFamily="Cascadia Mono, Consolas" FontSize="11.5" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
 
                         <TextBlock Text="TOOLS" Style="{StaticResource SectionHeader}" />
                         <Border Style="{StaticResource Card}">
