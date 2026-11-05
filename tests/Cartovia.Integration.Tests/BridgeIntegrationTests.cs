@@ -91,7 +91,8 @@ public sealed class BridgeIntegrationTests
         var layerClick = new TaskCompletionSource<MapMouseEventArgs>();
         map.Click += (_, e) => mapClick.TrySetResult(e);
         using var sub = map.OnLayer("zone-fill", LayerEvent.Click, (_, e) => layerClick.TrySetResult(e));
-        await Task.Delay(300); // subscriptions reach the page
+        // Subscriptions are fire-and-forget bridge calls processed in order: a round trip guarantees they are registered.
+        await map.GetCameraAsync();
 
         await host.Page.Mouse.ClickAsync(400, 300);
 
